@@ -12,21 +12,20 @@ public class StackOverflowHandler extends AbstractHandler {
     }
 
     @Override
-    public void handleRequest(Request request) {
+    public Object handleRequest(Request request) {
         if (request == null) {
-            return;
+            return null;
         }
 
         if (defineLink(request.link())) {
-            System.out.println(getId(request.link()));
-            return;
+//            System.out.println(getId(request.link()));
+            return getId(request.link());
         }
 
         if (nextHandler != null) {
-            nextHandler.handleRequest(request);
-            return;
+            return nextHandler.handleRequest(request);
         }
-        System.out.println("Некорректная ссылка");
+        return null;
     }
 
     @Override
@@ -36,7 +35,7 @@ public class StackOverflowHandler extends AbstractHandler {
         return pattern.matcher(link).find();
     }
 
-    public long getId(String link) {
+    public Long getId(String link) {
         Pattern pattern = Pattern.compile("questions/\\d+");
         Matcher matcher = pattern.matcher(link);
         int startIndex = 0;
@@ -49,7 +48,7 @@ public class StackOverflowHandler extends AbstractHandler {
         if (startIndex != endIndex) {
             return Long.parseLong(link.substring(startIndex, endIndex));
         } else {
-            return -1;
+            return null;
         }
     }
 }

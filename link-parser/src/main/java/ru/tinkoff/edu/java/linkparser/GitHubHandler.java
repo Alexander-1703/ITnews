@@ -12,22 +12,21 @@ public class GitHubHandler extends AbstractHandler {
     }
 
     @Override
-    public void handleRequest(Request request) {
+    public Object handleRequest(Request request) {
         if (request == null) {
-            return;
+            return null;
         }
 
         if (defineLink(request.link())) {
-            System.out.println("это github ссылка");
-            System.out.println(getUserAndRepository(request.link()));
-            return;
+//            System.out.println("это github ссылка");
+//            System.out.println(getUserAndRepository(request.link()));
+            return getUserAndRepository(request.link());
         }
 
         if (nextHandler != null) {
-            nextHandler.handleRequest(request);
-            return;
+            return nextHandler.handleRequest(request);
         }
-        System.out.println("Некорректная ссылка");
+        return null;
     }
 
     @Override

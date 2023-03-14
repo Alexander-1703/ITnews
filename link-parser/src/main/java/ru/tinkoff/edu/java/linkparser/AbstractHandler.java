@@ -7,10 +7,11 @@ public abstract class AbstractHandler {
         this.nextHandler = nextHandler;
     }
 
-    protected void handleRequest(Request request) {
+    protected Object handleRequest(Request request) {
         if (nextHandler != null) {
             nextHandler.handleRequest(request);
         }
+        return null;
     }
 
     abstract protected boolean defineLink(String link);
