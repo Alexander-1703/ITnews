@@ -6,45 +6,45 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StackOverflowHandlerTest {
     @Test
-    public void testGetId() {
-        StackOverflowHandler handler = new StackOverflowHandler(null);
+    public void parseTest() {
+        AbstractHandler handler = new StackOverflowHandler(null);
 
         // Проверка, что ссылка на StackOverflow корректно обрабатывается
         Request request = new Request("https://stackoverflow.com/questions/6690745/converting-integer-to-long");
         handler.handleRequest(request);
-        assertEquals(6690745, handler.getId(request.link()));
+        assertEquals(6690745L, handler.parse(request.link()));
 
         request = new Request("https://stackoverflow.com/questions/75736984");
         handler.handleRequest(request);
-        assertEquals(75736984, handler.getId(request.link()));
+        assertEquals(75736984L, handler.parse(request.link()));
 
         request = new Request("stackoverflow.com/questions/75736984/output-of-program-is-inccorect");
         handler.handleRequest(request);
-        assertEquals(75736984, handler.getId(request.link()));
+        assertEquals(75736984L, handler.parse(request.link()));
 
         request = new Request("https://www.stackoverflow.com/questions/75736984");
         handler.handleRequest(request);
-        assertEquals(75736984, handler.getId(request.link()));
+        assertEquals(75736984L, handler.parse(request.link()));
 
         request = new Request("http://stackoverflow.com/questions/75736984/output-of-program-is-inccorect");
         handler.handleRequest(request);
-        assertEquals(75736984, handler.getId(request.link()));
+        assertEquals(75736984L, handler.parse(request.link()));
 
         // Проверка, что некорректная ссылка не обрабатывается
 
         request = new Request("https://stackoverflow.com/questions/output-of-program-is-inccorect");
         handler.handleRequest(request);
-        assertEquals(-1, handler.getId(request.link()));
+        assertNull(handler.parse(request.link()));
 
         request = new Request("https://stackoverflow.com/75736984/output-of-program-is-inccorect");
         handler.handleRequest(request);
-        assertEquals(-1, handler.getId(request.link()));
+        assertNull(handler.parse(request.link()));
 
     }
 
     @Test
     public void defineLinkTest() {
-        StackOverflowHandler handler = new StackOverflowHandler(null);
+        AbstractHandler handler = new StackOverflowHandler(null);
         // Проверка, что ссылка на другой сайт не обрабатывается
 
         Request request = new Request("https://github.com/Alexander-1703/ITnews/blob/master/pom.xml");

@@ -19,7 +19,7 @@ public class StackOverflowHandler extends AbstractHandler {
 
         if (defineLink(request.link())) {
 //            System.out.println(getId(request.link()));
-            return getId(request.link());
+            return parse(request.link());
         }
 
         if (nextHandler != null) {
@@ -35,7 +35,8 @@ public class StackOverflowHandler extends AbstractHandler {
         return pattern.matcher(link).find();
     }
 
-    public Long getId(String link) {
+    @Override
+    public Long parse(String link) {
         Pattern pattern = Pattern.compile("questions/\\d+");
         Matcher matcher = pattern.matcher(link);
         int startIndex = 0;

@@ -18,9 +18,7 @@ public class GitHubHandler extends AbstractHandler {
         }
 
         if (defineLink(request.link())) {
-//            System.out.println("это github ссылка");
-//            System.out.println(getUserAndRepository(request.link()));
-            return getUserAndRepository(request.link());
+            return parse(request.link());
         }
 
         if (nextHandler != null) {
@@ -36,7 +34,8 @@ public class GitHubHandler extends AbstractHandler {
         return pattern.matcher(link).find();
     }
 
-    public AbstractMap.SimpleEntry<String, String> getUserAndRepository(String link) {
+    @Override
+    public AbstractMap.SimpleEntry<String, String> parse(String link) {
         Pattern pattern = Pattern.compile("github\\.com/([^/]+)/([^/]+)");
         Matcher matcher = pattern.matcher(link);
         int startIndex = 0;

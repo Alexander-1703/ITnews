@@ -15,4 +15,6 @@ public abstract class AbstractHandler {
     }
 
     abstract protected boolean defineLink(String link);
+
+    abstract protected Object parse(String link);
 }
