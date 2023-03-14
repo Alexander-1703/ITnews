@@ -13,5 +13,5 @@ public abstract class AbstractHandler {
         }
     }
 
-    abstract boolean defineLink(String link);
+    abstract protected boolean defineLink(String link);
 }

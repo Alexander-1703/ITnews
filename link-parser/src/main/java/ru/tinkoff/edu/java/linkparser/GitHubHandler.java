@@ -31,14 +31,13 @@ public class GitHubHandler extends AbstractHandler {
     }
 
     @Override
-    boolean defineLink(String link) {
+    protected boolean defineLink(String link) {
         String regex = "^(https?://)?(www\\.)?github\\.com(/.*)$";
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(link).find();
     }
 
-    private AbstractMap.SimpleEntry<String, String> getUserAndRepository(String link) {
-        //https://github.com/polis-vk/2022-ads
+    public AbstractMap.SimpleEntry<String, String> getUserAndRepository(String link) {
         Pattern pattern = Pattern.compile("github\\.com/([^/]+)/([^/]+)");
         Matcher matcher = pattern.matcher(link);
         int startIndex = 0;
@@ -48,8 +47,11 @@ public class GitHubHandler extends AbstractHandler {
             endIndex = matcher.end();
         }
 
-        String userAndRep = link.substring(startIndex, endIndex);
+        if (startIndex == endIndex) {
+            return null;
+        }
 
+        String userAndRep = link.substring(startIndex, endIndex);
         return new AbstractMap.SimpleEntry<>(userAndRep.split("/")[0], userAndRep.split("/")[1]);
     }
 }

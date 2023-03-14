@@ -18,7 +18,6 @@ public class StackOverflowHandler extends AbstractHandler {
         }
 
         if (defineLink(request.link())) {
-            System.out.println("это StackOverflow ссылка");
             System.out.println(getId(request.link()));
             return;
         }
@@ -31,13 +30,13 @@ public class StackOverflowHandler extends AbstractHandler {
     }
 
     @Override
-    boolean defineLink(String link) {
+    protected boolean defineLink(String link) {
         String regex = "^(https?://)?(www\\.)?stackoverflow\\.com(/.*)$";
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(link).find();
     }
 
-    private long getId(String link) {
+    public long getId(String link) {
         Pattern pattern = Pattern.compile("questions/\\d+");
         Matcher matcher = pattern.matcher(link);
         int startIndex = 0;
