@@ -1,20 +1,14 @@
 package ru.tinkoff.edu.java.linkparser;
 
-public abstract class AbstractHandler {
-    protected AbstractHandler nextHandler;
+abstract class AbstractHandler implements Handler {
+    protected Handler nextHandler;
 
-    public AbstractHandler(AbstractHandler nextHandler) {
+    public AbstractHandler(Handler nextHandler) {
+        setNextHandler(nextHandler);
+    }
+
+    @Override
+    public void setNextHandler(Handler nextHandler) {
         this.nextHandler = nextHandler;
     }
-
-    protected Object handleRequest(Request request) {
-        if (nextHandler != null) {
-            nextHandler.handleRequest(request);
-        }
-        return null;
-    }
-
-    abstract protected boolean defineLink(String link);
-
-    abstract protected Object parse(String link);
 }

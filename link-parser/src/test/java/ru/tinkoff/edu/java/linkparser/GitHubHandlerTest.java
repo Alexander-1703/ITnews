@@ -1,55 +1,49 @@
 package ru.tinkoff.edu.java.linkparser;
 
 
-import java.util.AbstractMap;
-
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import ru.tinkoff.edu.java.linkparser.dataobjects.GitHubData;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GitHubHandlerTest {
     @Test
     public void parseTest() {
-        AbstractHandler handler = new GitHubHandler(null);
+        Handler handler = new GitHubHandler(null);
 
         // Проверка, что ссылка на GitHub корректно обрабатывается
         Request request = new Request("https://github.com/Alexander-1703/ITnews/blob/master/pom.xml");
-        handler.handleRequest(request);
-        assertEquals(new AbstractMap.SimpleEntry<String, String> ("Alexander-1703", "ITnews"),
-                handler.parse(request.link()));
+        assertEquals(new GitHubData("Alexander-1703", "ITnews"),
+                handler.parse(request));
 
         request = new Request("https://github.com/Alexander-1703/ITnews");
-        handler.handleRequest(request);
-        assertEquals(new AbstractMap.SimpleEntry<String, String> ("Alexander-1703", "ITnews"),
-                handler.parse(request.link()));
+        assertEquals(new GitHubData("Alexander-1703", "ITnews"),
+                handler.parse(request));
 
         // Проверка, что некорректная ссылка не обрабатывается
         request = new Request("https://github.com/Alexander-1703/");
-        handler.handleRequest(request);
-        assertNull(handler.parse(request.link()));
+        assertNull(handler.parse(request));
 
         request = new Request("https://github.com");
-        handler.handleRequest(request);
-        assertNull(handler.parse(request.link()));
+        assertNull(handler.parse(request));
 
     }
 
     @Test
     public void defineLinkTest() {
-        AbstractHandler handler = new GitHubHandler(null);
+        Handler handler = new GitHubHandler(null);
 
         // Проверка, что ссылка на другой сайт не обрабатывается
         Request request = new Request("https://stackoverflow.com/questions/75736984/output-of-program-is-inccorect");
-        handler.handleRequest(request);
         assertFalse(handler.defineLink(request.link()));
 
         request = new Request("https://gitlab.com/questions/75736984/output-of-program-is-inccorect");
-        handler.handleRequest(request);
         assertFalse(handler.defineLink(request.link()));
 
         request = new Request("https://github.ru/questions/75736984/output-of-program-is-inccorect");
-        handler.handleRequest(request);
         assertFalse(handler.defineLink(request.link()));
-
     }
 }

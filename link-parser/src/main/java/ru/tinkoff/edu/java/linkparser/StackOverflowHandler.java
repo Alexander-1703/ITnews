@@ -1,55 +1,40 @@
 package ru.tinkoff.edu.java.linkparser;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ru.tinkoff.edu.java.linkparser.dataobjects.StackOverflowData;
+import ru.tinkoff.edu.java.linkparser.dataobjects.UrlData;
+
 public class StackOverflowHandler extends AbstractHandler {
 
-    private static final int INDEX_SHIFT = 10;
-
-    public StackOverflowHandler(AbstractHandler nextHandler) {
+    public StackOverflowHandler(Handler nextHandler) {
         super(nextHandler);
     }
 
     @Override
-    public Object handleRequest(Request request) {
-        if (request == null) {
-            return null;
-        }
-
-        if (defineLink(request.link())) {
-//            System.out.println(getId(request.link()));
-            return parse(request.link());
-        }
-
-        if (nextHandler != null) {
-            return nextHandler.handleRequest(request);
-        }
-        return null;
-    }
-
-    @Override
-    protected boolean defineLink(String link) {
-        String regex = "^(https?://)?(www\\.)?stackoverflow\\.com(/.*)$";
+    public boolean defineLink(String link) {
+        String regex = "^(https?://)?(www\\.)?stackoverflow\\.com/questions(/.*)$";
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(link).find();
     }
 
     @Override
-    public Long parse(String link) {
-        Pattern pattern = Pattern.compile("questions/\\d+");
-        Matcher matcher = pattern.matcher(link);
-        int startIndex = 0;
-        int endIndex = 0;
-        if (matcher.find()) {
-            startIndex = matcher.start() + INDEX_SHIFT;
-            endIndex = matcher.end();
+    public UrlData parse(Request request) {
+        if (!defineLink(request.link())) {
+            return nextHandler == null ? null :  nextHandler.parse(request);
         }
-
-        if (startIndex != endIndex) {
-            return Long.parseLong(link.substring(startIndex, endIndex));
-        } else {
-            return null;
+        try {
+            URI uri = new URI(request.link());
+            String[] pathComponents = uri.getPath().split("/");
+            if (pathComponents.length >= 3) {
+                return new StackOverflowData(Long.parseLong(pathComponents[2]));
+            }
+        } catch (URISyntaxException | NumberFormatException e) {
+            System.err.println("Invalid url: " + request.link());
         }
+        return null;
     }
 }
