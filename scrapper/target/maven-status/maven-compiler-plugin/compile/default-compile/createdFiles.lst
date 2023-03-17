@@ -1,0 +1,4 @@
+META-INF\spring.components
+ru\tinkoff\edu\java\scrapper\ScrapperApplication.class
+META-INF\spring-configuration-metadata.json
+ru\tinkoff\edu\java\scrapper\configuration\ApplicationConfig.class

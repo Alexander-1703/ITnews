@@ -1,0 +1,18 @@
+{
+  "groups": [
+    {
+      "name": "scrapper",
+      "type": "ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig",
+      "sourceType": "ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "scrapper.test",
+      "type": "java.lang.String",
+      "description": "Description for scrapper.test.",
+      "sourceType": "ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig"
+    }
+  ],
+  "hints": []
+}
