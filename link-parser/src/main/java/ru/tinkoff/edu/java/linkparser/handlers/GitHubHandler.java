@@ -9,6 +9,7 @@ import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
 import ru.tinkoff.edu.java.linkparser.dtos.UrlData;
 
 public class GitHubHandler extends AbstractHandler {
+    private static final String REGEX_PATTERN_GITHUB = "^(https?://)?(www\\.)?github\\.com(/.*)$";
 
     public GitHubHandler(Handler nextHandler) {
         super(nextHandler);
@@ -16,9 +17,7 @@ public class GitHubHandler extends AbstractHandler {
 
     @Override
     public boolean defineLink(String link) {
-        String regex = "^(https?://)?(www\\.)?github\\.com(/.*)$";
-        Pattern pattern = Pattern.compile(regex);
-        return pattern.matcher(link).find();
+        return Pattern.compile(REGEX_PATTERN_GITHUB).matcher(link).find();
     }
 
     @Override

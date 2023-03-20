@@ -9,6 +9,7 @@ import ru.tinkoff.edu.java.linkparser.dtos.StackOverflowData;
 import ru.tinkoff.edu.java.linkparser.dtos.UrlData;
 
 public class StackOverflowHandler extends AbstractHandler {
+    private static final String REGEX_PATTERN_STACKOVERFLOW = "^(https?://)?(www\\.)?stackoverflow\\.com/questions(/.*)$";
 
     public StackOverflowHandler(Handler nextHandler) {
         super(nextHandler);
@@ -16,15 +17,13 @@ public class StackOverflowHandler extends AbstractHandler {
 
     @Override
     public boolean defineLink(String link) {
-        String regex = "^(https?://)?(www\\.)?stackoverflow\\.com/questions(/.*)$";
-        Pattern pattern = Pattern.compile(regex);
-        return pattern.matcher(link).find();
+        return Pattern.compile(REGEX_PATTERN_STACKOVERFLOW).matcher(link).find();
     }
 
     @Override
     public UrlData parse(Request request) {
         if (!defineLink(request.link())) {
-            return nextHandler == null ? null :  nextHandler.parse(request);
+            return nextHandler == null ? null : nextHandler.parse(request);
         }
         try {
             URI uri = new URI(request.link());
