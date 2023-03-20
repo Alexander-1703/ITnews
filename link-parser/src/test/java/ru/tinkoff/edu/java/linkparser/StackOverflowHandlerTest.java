@@ -2,7 +2,10 @@ package ru.tinkoff.edu.java.linkparser;
 
 import org.junit.jupiter.api.Test;
 
-import ru.tinkoff.edu.java.linkparser.dataobjects.StackOverflowData;
+import ru.tinkoff.edu.java.linkparser.Request.Request;
+import ru.tinkoff.edu.java.linkparser.dtos.StackOverflowData;
+import ru.tinkoff.edu.java.linkparser.handlers.Handler;
+import ru.tinkoff.edu.java.linkparser.handlers.StackOverflowHandler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

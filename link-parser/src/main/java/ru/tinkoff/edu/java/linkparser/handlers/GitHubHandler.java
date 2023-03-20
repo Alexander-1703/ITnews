@@ -1,11 +1,12 @@
-package ru.tinkoff.edu.java.linkparser;
+package ru.tinkoff.edu.java.linkparser.handlers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Pattern;
 
-import ru.tinkoff.edu.java.linkparser.dataobjects.GitHubData;
-import ru.tinkoff.edu.java.linkparser.dataobjects.UrlData;
+import ru.tinkoff.edu.java.linkparser.Request.Request;
+import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
+import ru.tinkoff.edu.java.linkparser.dtos.UrlData;
 
 public class GitHubHandler extends AbstractHandler {
 

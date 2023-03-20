@@ -1,8 +1,9 @@
-package ru.tinkoff.edu.java.linkparser;
+package ru.tinkoff.edu.java.linkparser.handlers;
 
-import ru.tinkoff.edu.java.linkparser.dataobjects.UrlData;
+import ru.tinkoff.edu.java.linkparser.Request.Request;
+import ru.tinkoff.edu.java.linkparser.dtos.UrlData;
 
-interface Handler {
+public interface Handler {
 
     void setNextHandler(Handler handler);
 

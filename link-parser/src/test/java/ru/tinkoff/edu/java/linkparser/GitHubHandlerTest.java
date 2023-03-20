@@ -3,7 +3,10 @@ package ru.tinkoff.edu.java.linkparser;
 
 import org.junit.jupiter.api.Test;
 
-import ru.tinkoff.edu.java.linkparser.dataobjects.GitHubData;
+import ru.tinkoff.edu.java.linkparser.Request.Request;
+import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
+import ru.tinkoff.edu.java.linkparser.handlers.GitHubHandler;
+import ru.tinkoff.edu.java.linkparser.handlers.Handler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

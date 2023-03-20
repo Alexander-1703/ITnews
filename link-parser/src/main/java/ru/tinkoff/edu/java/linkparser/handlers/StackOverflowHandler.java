@@ -1,12 +1,12 @@
-package ru.tinkoff.edu.java.linkparser;
+package ru.tinkoff.edu.java.linkparser.handlers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ru.tinkoff.edu.java.linkparser.dataobjects.StackOverflowData;
-import ru.tinkoff.edu.java.linkparser.dataobjects.UrlData;
+import ru.tinkoff.edu.java.linkparser.Request.Request;
+import ru.tinkoff.edu.java.linkparser.dtos.StackOverflowData;
+import ru.tinkoff.edu.java.linkparser.dtos.UrlData;
 
 public class StackOverflowHandler extends AbstractHandler {
 

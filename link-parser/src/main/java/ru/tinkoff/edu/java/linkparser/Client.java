@@ -1,5 +1,8 @@
 package ru.tinkoff.edu.java.linkparser;
 
+import ru.tinkoff.edu.java.linkparser.Request.Request;
+import ru.tinkoff.edu.java.linkparser.handlers.Handler;
+
 public class Client {
     public static void main(String[] args) {
         Handler handler = Handler.handlersChainBuilder();
