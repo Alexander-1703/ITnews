@@ -1,5 +1,7 @@
 scrapper:
   test: "scrapper"
+  scheduler:
+    interval:10s
 
 springdoc:
   swagger-ui:

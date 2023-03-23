@@ -15,7 +15,7 @@ public class TgChatController {
 
     @PostMapping("/{id}")
     public ResponseEntity<String> registerChat(@PathVariable Long id) {
-        if (id < 0 ) {
+        if (id < 0) {
             throw new IllegalArgumentException("Id can`t be negative");
         }
         return ResponseEntity.ok("Чат зарегистрирован");
