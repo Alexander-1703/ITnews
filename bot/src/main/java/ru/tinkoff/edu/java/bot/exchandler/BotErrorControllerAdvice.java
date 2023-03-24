@@ -11,16 +11,11 @@ import ru.tinkoff.edu.java.dto.ApiErrorResponse;
 
 @RestControllerAdvice
 public class BotErrorControllerAdvice {
+    private static final String BAD_REQUEST = "400";
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
-        ApiErrorResponse errorResponse = new ApiErrorResponse(
-                "Некорректные параметры запроса",
-                "400",
-                e.getClass().getSimpleName(),
-                e.getMessage(),
-                Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
-        );
+        ApiErrorResponse errorResponse = new ApiErrorResponse("Некорректные параметры запроса", BAD_REQUEST, e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }

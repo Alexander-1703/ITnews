@@ -11,9 +11,9 @@ import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 
 @Configuration
 public class ClientConfiguration {
-    @Value("${github.api}")
+    @Value("${github.api:https://api.github.com}")
     String githubBaseUrl;
-    @Value("${stackoverflow.api}")
+    @Value("${stackoverflow.api:https://api.stackexchange.com/2.2}")
     String stackoverflowBaseUrl;
 
     @Bean

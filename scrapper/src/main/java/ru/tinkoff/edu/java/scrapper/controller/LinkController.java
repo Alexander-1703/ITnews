@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.java.scrapper.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,17 +14,17 @@ import ru.tinkoff.edu.java.scrapper.dto.request.LinkRequest;
 public class LinkController {
 
     @GetMapping()
-    public ResponseEntity<String> getLinks(@RequestBody LinkRequest getRequest) {
-        return ResponseEntity.ok("Ссылки успешно получены");
+    public String getLinks(@RequestBody LinkRequest getRequest) {
+        return "Ссылки успешно получены";
     }
 
     @PostMapping()
-    public ResponseEntity<String> addLink(@RequestBody LinkRequest addRequest) {
-        return ResponseEntity.ok("Ссылка успешно добавлена");
+    public String addLink(@RequestBody LinkRequest addRequest) {
+        return "Ссылка успешно добавлена";
     }
 
     @DeleteMapping()
-    public ResponseEntity<String> removeLink(@RequestBody LinkRequest removeRequest) {
-        return ResponseEntity.ok("Ссылка успешно убрана");
+    public String removeLink(@RequestBody LinkRequest removeRequest) {
+        return "Ссылка успешно убрана";
     }
 }
