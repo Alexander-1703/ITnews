@@ -10,7 +10,7 @@ import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowQuestionResponse;
 
 @Component
 public class StackOverflowClientImpl implements StackOverflowClient {
-    private static final String STACKOVERFLOW_URI = "/questions/{id}?site=stackoverflow";
+    private static final String STACKOVERFLOW_URI = "/questions/{id}";
     private final WebClient stackoverflowWebClient;
 
     @Autowired
@@ -21,7 +21,10 @@ public class StackOverflowClientImpl implements StackOverflowClient {
     @Override
     public Mono<StackOverflowQuestionResponse> fetchQuestion(int questionId) {
         return stackoverflowWebClient.get()
-                .uri(STACKOVERFLOW_URI, questionId)
+                .uri(uriBuilder -> uriBuilder
+                        .path(STACKOVERFLOW_URI)
+                        .queryParam("site", "stackoverflow")
+                        .build(questionId))
                 .retrieve()
                 .bodyToMono(StackOverflowQuestionResponse.class);
 
