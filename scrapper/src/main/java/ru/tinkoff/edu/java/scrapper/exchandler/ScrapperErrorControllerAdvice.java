@@ -13,6 +13,7 @@ import ru.tinkoff.edu.java.dto.ApiErrorResponse;
 @RestControllerAdvice
 public class ScrapperErrorControllerAdvice {
     private static final String BAD_REQUEST = "400";
+    private static final String NOT_FOUND = "404";
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
@@ -22,7 +23,7 @@ public class ScrapperErrorControllerAdvice {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ApiErrorResponse> handleNoSuchElementException(NoSuchElementException e) {
-        ApiErrorResponse errorResponse = new ApiErrorResponse("Ссылка не найдена", BAD_REQUEST, e);
+        ApiErrorResponse errorResponse = new ApiErrorResponse("Ссылка не найдена", NOT_FOUND, e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
