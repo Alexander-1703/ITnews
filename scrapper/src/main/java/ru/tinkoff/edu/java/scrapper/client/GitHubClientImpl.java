@@ -1,26 +1,35 @@
 package ru.tinkoff.edu.java.scrapper.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubRepositoryResponse;
 
-@Component
 public class GitHubClientImpl implements GitHubClient {
     private static final String GITHUB_URI = "/repos/{owner}/{repo}";
-    private final WebClient gitHubWebClient;
+    private static final String GITHUB_BASE_URL = "https://api.github.com";
+    private final String url;
+    private WebClient githubWebClient;
 
-    @Autowired
-    public GitHubClientImpl(@Qualifier("githubWebClient") WebClient gitHubWebClient) {
-        this.gitHubWebClient = gitHubWebClient;
+    public GitHubClientImpl(String url) {
+        this.url = url;
+    }
+
+    public GitHubClientImpl() {
+        this.url = GITHUB_BASE_URL;
+    }
+
+    @PostConstruct
+    public void buildGithubWebClient() {
+        githubWebClient = WebClient.builder()
+                .baseUrl(url)
+                .build();
     }
 
     @Override
     public Mono<GitHubRepositoryResponse> fetchRepository(String owner, String repo) {
-        return gitHubWebClient.get()
+        return githubWebClient.get()
                 .uri(GITHUB_URI, owner, repo)
                 .retrieve()
                 .bodyToMono(GitHubRepositoryResponse.class);

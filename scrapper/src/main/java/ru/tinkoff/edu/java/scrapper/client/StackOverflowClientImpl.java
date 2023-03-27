@@ -1,21 +1,30 @@
 package ru.tinkoff.edu.java.scrapper.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowQuestionResponse;
 
-@Component
 public class StackOverflowClientImpl implements StackOverflowClient {
     private static final String STACKOVERFLOW_URI = "/questions/{id}";
-    private final WebClient stackoverflowWebClient;
+    private static final String STACKOVERFLOW_BASE_URL = "https://api.stackexchange.com/2.3";
+    private final String url;
+    private WebClient stackoverflowWebClient;
 
-    @Autowired
-    public StackOverflowClientImpl(@Qualifier("stackoverflowWebClient") WebClient stackoverflowWebClient) {
-        this.stackoverflowWebClient = stackoverflowWebClient;
+    public StackOverflowClientImpl(String url) {
+        this.url = url;
+    }
+
+    public StackOverflowClientImpl() {
+        this.url = STACKOVERFLOW_BASE_URL;
+    }
+
+    @PostConstruct
+    public void buildStackoverflowWebClient() {
+        stackoverflowWebClient = WebClient.builder()
+                .baseUrl(url)
+                .build();
     }
 
     @Override
@@ -27,6 +36,5 @@ public class StackOverflowClientImpl implements StackOverflowClient {
                         .build(questionId))
                 .retrieve()
                 .bodyToMono(StackOverflowQuestionResponse.class);
-
     }
 }
