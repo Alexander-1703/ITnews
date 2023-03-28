@@ -16,6 +16,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <springdoc-openapi-starter-webmvc-ui.version>2.0.2</springdoc-openapi-starter-webmvc-ui.version>
         <spring-boot-starter-webflux.version>3.0.4</spring-boot-starter-webflux.version>
+        <telegram-bot-api.version>6.5.0</telegram-bot-api.version>
     </properties>
 
     <build>
@@ -80,6 +81,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
             <version>${spring-boot-starter-webflux.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.pengrad</groupId>
+            <artifactId>java-telegram-bot-api</artifactId>
+            <version>${telegram-bot-api.version}</version>
         </dependency>
 
     </dependencies>

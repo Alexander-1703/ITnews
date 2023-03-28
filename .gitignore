@@ -1,4 +1,4 @@
-
 .idea/
 **/target/
 **/META-INF/
+bot/src/main/resources/application.yaml
