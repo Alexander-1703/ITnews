@@ -5,8 +5,6 @@ import java.time.Duration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import ru.tinkoff.edu.java.bot.configuration.ApplicationConfig;
-
 @Configuration
 public class SchedulerUpdatesConfig {
     @Bean
