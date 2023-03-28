@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.telegrambot.scheduler;
+package ru.tinkoff.edu.java.bot.configuration;
 
 import java.time.Duration;
 
@@ -11,6 +11,6 @@ import ru.tinkoff.edu.java.bot.configuration.ApplicationConfig;
 public class SchedulerUpdatesConfig {
     @Bean
     public Duration updatesScheduler(ApplicationConfig appConfig) {
-        return appConfig.fetchUpdates().fixedDelay();
+        return appConfig.updates().fixedDelay();
     }
 }
