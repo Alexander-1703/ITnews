@@ -8,16 +8,19 @@ import org.springframework.stereotype.Component;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.TgBot;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.UserMessageProcess.UserMessageProcessor;
 
 @Component
+@Slf4j
 public class TelegramBotImpl implements TgBot {
     private final TelegramBot bot;
     UserMessageProcessor userMessageProcessor;
@@ -30,8 +33,8 @@ public class TelegramBotImpl implements TgBot {
     }
 
     @Override
-    public <T extends BaseRequest<T, R>, R extends BaseResponse> void execute(BaseRequest<T, R> request) {
-        bot.execute(request);
+    public <T extends BaseRequest<T, R>, R extends BaseResponse> R execute(BaseRequest<T, R> request) {
+        return bot.execute(request);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class TelegramBotImpl implements TgBot {
     @Override
     public void fetchUpdates() {
         GetUpdates getUpdates = new GetUpdates().limit(100).offset(lastUpdatedId + 1);
-        GetUpdatesResponse updatesResponse = bot.execute(getUpdates);
+        GetUpdatesResponse updatesResponse = execute(getUpdates);
         List<Update> updates = updatesResponse.updates();
 
         if (!updates.isEmpty()) {
@@ -57,7 +60,9 @@ public class TelegramBotImpl implements TgBot {
         for (Update update : updates) {
             SendMessage response = userMessageProcessor.process(update);
             if (response != null) {
-                bot.execute(response);
+                response.parseMode(ParseMode.Markdown);
+                log.info("Sending response");
+                execute(response);
             }
             processedUpdates++;
         }

@@ -8,7 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TrackCommand implements Command {
     private static final String TRACK_MESSAGE = """
-            Ссылка добавлена в список отслеживания. Вы получите уведомление обо всех изменениях
+            Ссылка добавлена в список отслеживания.
+            Вы получите уведомление обо всех изменениях
             """;
 
     @Override

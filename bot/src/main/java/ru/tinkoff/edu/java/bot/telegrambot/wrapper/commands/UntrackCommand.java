@@ -8,7 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UntrackCommand implements Command {
     private static final String UNTRACK_MESSAGE = """
-            Ссылка удалена из списка отслеживания. Вы больше не будете получать уведомления об изменениях
+            Ссылка удалена из списка отслеживания.
+            Вы больше не будете получать уведомления об изменениях
             """;
     @Override
     public String getCommand() {
