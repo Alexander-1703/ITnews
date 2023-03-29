@@ -19,7 +19,7 @@ public class HelpCommand implements Command {
 
     @Override
     public String getCommand() {
-        return "/help";
+        return "help";
     }
 
     @Override

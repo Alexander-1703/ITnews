@@ -14,7 +14,7 @@ public class StartCommand implements Command {
 
     @Override
     public String getCommand() {
-        return "/start";
+        return "start";
     }
 
     @Override

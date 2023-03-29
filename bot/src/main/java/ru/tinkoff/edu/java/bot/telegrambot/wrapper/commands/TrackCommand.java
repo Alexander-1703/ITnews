@@ -14,7 +14,7 @@ public class TrackCommand implements Command {
 
     @Override
     public String getCommand() {
-        return "/track";
+        return "track";
     }
 
     @Override

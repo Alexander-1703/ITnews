@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ListCommand implements Command {
     @Override
     public String getCommand() {
-        return "/list";
+        return "list";
     }
 
     @Override

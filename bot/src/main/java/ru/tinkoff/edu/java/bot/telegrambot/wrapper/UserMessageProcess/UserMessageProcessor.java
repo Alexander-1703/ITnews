@@ -2,8 +2,6 @@ package ru.tinkoff.edu.java.bot.telegrambot.wrapper.UserMessageProcess;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 

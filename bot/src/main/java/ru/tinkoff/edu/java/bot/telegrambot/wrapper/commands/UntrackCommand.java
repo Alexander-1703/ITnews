@@ -13,7 +13,7 @@ public class UntrackCommand implements Command {
             """;
     @Override
     public String getCommand() {
-        return "/untrack";
+        return "untrack";
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.pengrad.telegrambot.response.GetUpdatesResponse;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.TgBot;
+import ru.tinkoff.edu.java.bot.telegrambot.wrapper.UserMessageProcess.CommandListBuilder;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.UserMessageProcess.UserMessageProcessor;
 
 @Component
@@ -30,6 +31,7 @@ public class TelegramBotImpl implements TgBot {
                            @Autowired UserMessageProcessor userMessageProcessor) {
         this.userMessageProcessor = userMessageProcessor;
         bot = new TelegramBot(token);
+        execute(CommandListBuilder.buildMenu());
     }
 
     @Override
