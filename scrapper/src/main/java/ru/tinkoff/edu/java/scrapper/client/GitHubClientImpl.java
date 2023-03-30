@@ -8,16 +8,11 @@ import ru.tinkoff.edu.java.scrapper.dto.response.GitHubRepositoryResponse;
 
 public class GitHubClientImpl implements GitHubClient {
     private static final String GITHUB_URI = "/repos/{owner}/{repo}";
-    private static final String GITHUB_BASE_URL = "https://api.github.com";
     private final String url;
     private WebClient githubWebClient;
 
     public GitHubClientImpl(String url) {
         this.url = url;
-    }
-
-    public GitHubClientImpl() {
-        this.url = GITHUB_BASE_URL;
     }
 
     @PostConstruct

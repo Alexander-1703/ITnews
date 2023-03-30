@@ -8,16 +8,11 @@ import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowQuestionResponse;
 
 public class StackOverflowClientImpl implements StackOverflowClient {
     private static final String STACKOVERFLOW_URI = "/questions/{id}";
-    private static final String STACKOVERFLOW_BASE_URL = "https://api.stackexchange.com/2.3";
     private final String url;
     private WebClient stackoverflowWebClient;
 
     public StackOverflowClientImpl(String url) {
         this.url = url;
-    }
-
-    public StackOverflowClientImpl() {
-        this.url = STACKOVERFLOW_BASE_URL;
     }
 
     @PostConstruct
