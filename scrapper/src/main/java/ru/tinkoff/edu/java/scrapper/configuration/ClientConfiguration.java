@@ -16,26 +16,20 @@ public class ClientConfiguration {
     private final String githubUrl;
     private final String stackoverflowUrl;
 
-    public ClientConfiguration(@Value("${client.github-api}") String githubUrl,
-                               @Value("${client.stackoverflow-api}") String stackoverflowUrl) {
+    public ClientConfiguration(@Value("${client.github-api:https://api.github.com}") String githubUrl,
+                               @Value("${client.stackoverflow-api:https://api.stackexchange.com/2.3}") String stackoverflowUrl) {
         this.githubUrl = githubUrl;
         this.stackoverflowUrl = stackoverflowUrl;
     }
 
     @Bean
     public GitHubClient githubWebClient() {
-        if (githubUrl != null) {
-            return new GitHubClientImpl(githubUrl);
-        }
-        return new GitHubClientImpl();
+        return new GitHubClientImpl(githubUrl);
     }
 
     @Bean
     public StackOverflowClient stackoverflowWebClient() {
-        if (stackoverflowUrl != null) {
-            return new StackOverflowClientImpl(stackoverflowUrl);
-        }
-        return new StackOverflowClientImpl();
+        return new StackOverflowClientImpl(stackoverflowUrl);
     }
 
     @Bean
