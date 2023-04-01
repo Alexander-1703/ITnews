@@ -14,14 +14,15 @@ public class UntrackCommand implements Command {
             Ссылка удалена из списка отслеживания.
             Вы больше не будете получать уведомления об изменениях
             """;
+
     @Override
     public String getCommand() {
-        return "untrack";
+        return CommandEnum.UNTRACK.getCommandName();
     }
 
     @Override
     public String getDescription() {
-        return "Прекратить отслеживание ссылки";
+        return CommandEnum.UNTRACK.getDescription();
     }
 
     @Override

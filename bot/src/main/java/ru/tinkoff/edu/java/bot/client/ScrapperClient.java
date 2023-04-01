@@ -5,13 +5,13 @@ import ru.tinkoff.edu.java.bot.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.bot.dto.response.ListLinkResponse;
 
 public interface ScrapperClient {
-    Mono<Boolean> registerChat(long chatId);
+    boolean registerChat(long chatId);
 
-    Mono<Boolean> deleteChat(long chatId);
+    boolean deleteChat(long chatId);
 
-    Mono<ListLinkResponse> getLinks(long chatId);
+    ListLinkResponse getLinks(long chatId);
 
-    Mono<LinkResponse> addLink(long chatId, String url);
+    LinkResponse addLink(long chatId, String url);
 
-    Mono<LinkResponse> removeLink(long chatId, String url);
+    LinkResponse removeLink(long chatId, String url);
 }

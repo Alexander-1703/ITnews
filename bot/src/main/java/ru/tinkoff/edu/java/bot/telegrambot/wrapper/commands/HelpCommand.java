@@ -22,12 +22,12 @@ public class HelpCommand implements Command {
 
     @Override
     public String getCommand() {
-        return "help";
+        return CommandEnum.HELP.getCommandName();
     }
 
     @Override
     public String getDescription() {
-        return "Справка об использовании бота";
+        return CommandEnum.HELP.getDescription();
     }
 
     @Override

@@ -32,8 +32,8 @@ public class ScrapperClientImpl implements ScrapperClient {
     }
 
     @Override
-    public Mono<Boolean> registerChat(long chatId) {
-        return scrapperClient
+    public boolean registerChat(long chatId) {
+        return Boolean.TRUE.equals(scrapperClient
                 .post()
                 .uri(TG_CHAT_URI, chatId)
                 .retrieve()
@@ -46,12 +46,13 @@ public class ScrapperClientImpl implements ScrapperClient {
                         }))
                 .bodyToMono(Void.class)
                 .thenReturn(true)
-                .onErrorReturn(false);
+                .onErrorReturn(false)
+                .block());
     }
 
     @Override
-    public Mono<Boolean> deleteChat(long chatId) {
-        return scrapperClient
+    public boolean deleteChat(long chatId) {
+        return Boolean.TRUE.equals(scrapperClient
                 .delete()
                 .uri(TG_CHAT_URI, chatId)
                 .retrieve()
@@ -64,11 +65,12 @@ public class ScrapperClientImpl implements ScrapperClient {
                         }))
                 .bodyToMono(Void.class)
                 .thenReturn(true)
-                .onErrorReturn(false);
+                .onErrorReturn(false)
+                .block());
     }
 
     @Override
-    public Mono<ListLinkResponse> getLinks(long chatId) {
+    public ListLinkResponse getLinks(long chatId) {
         return scrapperClient
                 .get()
                 .uri(LINKS_URI)
@@ -80,11 +82,12 @@ public class ScrapperClientImpl implements ScrapperClient {
                                     "occurred: " + apiErrorResponse.exceptionMessage());
                             return Mono.empty();
                         }))
-                .bodyToMono(ListLinkResponse.class);
+                .bodyToMono(ListLinkResponse.class)
+                .block();
     }
 
     @Override
-    public Mono<LinkResponse> addLink(long chatId, String url) {
+    public LinkResponse addLink(long chatId, String url) {
         return scrapperClient
                 .post()
                 .uri(LINKS_URI)
@@ -97,11 +100,12 @@ public class ScrapperClientImpl implements ScrapperClient {
                                     "occurred: " + apiErrorResponse.exceptionMessage());
                             return Mono.empty();
                         }))
-                .bodyToMono(LinkResponse.class);
+                .bodyToMono(LinkResponse.class)
+                .block();
     }
 
     @Override
-    public Mono<LinkResponse> removeLink(long chatId, String url) {
+    public LinkResponse removeLink(long chatId, String url) {
         return scrapperClient
                 .method(HttpMethod.DELETE)
                 .uri(LINKS_URI)
@@ -114,6 +118,7 @@ public class ScrapperClientImpl implements ScrapperClient {
                                     "occurred: " + apiErrorResponse.exceptionMessage());
                             return Mono.empty();
                         }))
-                .bodyToMono(LinkResponse.class);
+                .bodyToMono(LinkResponse.class)
+                .block();
     }
 }

@@ -17,12 +17,12 @@ public class TrackCommand implements Command {
 
     @Override
     public String getCommand() {
-        return "track";
+        return CommandEnum.TRACK.getCommandName();
     }
 
     @Override
     public String getDescription() {
-        return "Начать отслеживание ссылки";
+        return CommandEnum.TRACK.getDescription();
     }
 
     @Override
