@@ -1,8 +1,11 @@
 package ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands;
 
+import org.springframework.stereotype.Component;
+
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 
+@Component
 public class HelpCommand implements Command {
     private static final String HELP_MESSAGE = """
             Для того, чтобы начать отслеживать ресурс достаточно отправить мне ссылку на репозиторий github или 

@@ -14,16 +14,6 @@ import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.TrackCommand;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.UntrackCommand;
 
 public class CommandListBuilder {
-    public static List<? extends Command> build() {
-        return Arrays.asList(
-                new StartCommand(),
-                new HelpCommand(),
-                new TrackCommand(),
-                new UntrackCommand(),
-                new ListCommand()
-        );
-    }
-
     public static SetMyCommands buildMenu() {
         Command start = new StartCommand();
         Command help = new HelpCommand();

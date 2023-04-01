@@ -24,7 +24,7 @@ import ru.tinkoff.edu.java.bot.telegrambot.wrapper.UserMessageProcess.UserMessag
 @Slf4j
 public class TelegramBotImpl implements TgBot {
     private final TelegramBot bot;
-    UserMessageProcessor userMessageProcessor;
+    private final UserMessageProcessor userMessageProcessor;
     private int lastUpdatedId = 0;
 
     public TelegramBotImpl(@Value("${bot.token}") String token,

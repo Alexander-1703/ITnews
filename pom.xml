@@ -23,6 +23,8 @@
         <jetbrains.annotaions.version>23.1.0</jetbrains.annotaions.version>
         <lombok.version>1.18.26</lombok.version>
         <spring-context-indexer.version>6.0.6</spring-context-indexer.version>
+        <failsafe-plugin.version>2.22.2</failsafe-plugin.version>
+        <surefire-plugin.version>2.22.2</surefire-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -129,6 +131,16 @@
                         <release>17</release>
                         <parameters>true</parameters>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${failsafe-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${surefire-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

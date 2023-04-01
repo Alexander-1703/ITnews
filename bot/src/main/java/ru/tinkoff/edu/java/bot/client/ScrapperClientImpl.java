@@ -19,7 +19,6 @@ import ru.tinkoff.edu.java.dto.ApiErrorResponse;
 @RequiredArgsConstructor
 public class ScrapperClientImpl implements ScrapperClient {
     private static final String CHAT_ID = "chat_id";
-    private static final String LINK_FOR_DEL = "delete_link";
     private static final String TG_CHAT_URI = "/tg-chat/{id}";
     private static final String LINKS_URI = "/links";
     private final String url;
