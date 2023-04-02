@@ -1,5 +1,8 @@
 package ru.tinkoff.edu.java.bot.client;
 
+import java.net.URI;
+import java.util.List;
+
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.BodyInserters;

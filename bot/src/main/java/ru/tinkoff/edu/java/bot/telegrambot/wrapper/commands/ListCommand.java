@@ -9,19 +9,21 @@ import org.springframework.stereotype.Component;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 
-import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.bot.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.bot.service.LinkService;
 
 @Slf4j
 @Component
+@AllArgsConstructor
+@NoArgsConstructor
 public class ListCommand implements Command {
     private static final String EMPTY_LIST_MESSAGE = "Список отслеживаемых ссылок пустой!";
     private LinkService linkService;
 
     @Autowired
-    @PostConstruct
     public void setLinkService(LinkService linkService) {
         this.linkService = linkService;
     }

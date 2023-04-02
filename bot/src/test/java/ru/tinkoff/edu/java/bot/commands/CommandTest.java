@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot;
+package ru.tinkoff.edu.java.bot.commands;
 
 
 import java.net.URI;
@@ -24,8 +24,8 @@ import static org.mockito.Mockito.when;
 public class CommandTest {
     private static final String EMPTY_LIST_MESSAGE = "Список отслеживаемых ссылок пустой!";
 
-    LinkService linkService;
-    ListCommand listCommand;
+    private LinkService linkService;
+    private ListCommand listCommand;
 
     @BeforeEach
     void setup() {

@@ -13,6 +13,8 @@ import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.Command;
 
 @Component
 public class DefaultUserMessageProcessor implements UserMessageProcessor {
+    private static final String UNKNOWN_COMMAND_MESSAGE = "Такой команды не существует!";
+
     private final List<? extends Command> commandsList;
 
     @Autowired
@@ -34,6 +36,7 @@ public class DefaultUserMessageProcessor implements UserMessageProcessor {
                     return command.handle(update);
                 }
             }
+            return new SendMessage(message.chat().id(), UNKNOWN_COMMAND_MESSAGE);
         }
         return null;
     }
