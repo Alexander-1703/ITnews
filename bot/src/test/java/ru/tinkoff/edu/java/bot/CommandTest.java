@@ -3,10 +3,10 @@ package ru.tinkoff.edu.java.bot;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import com.pengrad.telegrambot.model.Chat;
@@ -16,19 +16,54 @@ import com.pengrad.telegrambot.request.SendMessage;
 
 import ru.tinkoff.edu.java.bot.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.bot.service.LinkService;
-import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.Command;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.ListCommand;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class CommandTest {
-    @Mock
-    LinkService linkService;
-    Command listCommand;
+    private static final String EMPTY_LIST_MESSAGE = "Список отслеживаемых ссылок пустой!";
 
-    @BeforeAll
+    LinkService linkService;
+    ListCommand listCommand;
+
+    @BeforeEach
     void setup() {
         listCommand = new ListCommand();
+        linkService = Mockito.mock(LinkService.class);
+        listCommand.setLinkService(linkService);
+    }
+
+    @Test
+    public void notEmptyListTest() {
+        //given
+        long chatId = 0L;
+        List<LinkResponse> linkList = List.of(
+                new LinkResponse(chatId, URI.create("github.com/Alexander-1703/ITnews")),
+                new LinkResponse(chatId, URI.create("stackoverflow.com/questions/123")));
+        Update update = getUpdate(chatId);
+        when(linkService.getLinks(chatId)).thenReturn(linkList);
+
+        //when
+        SendMessage message = listCommand.handle(update);
+
+        //then
+        assertEquals(message.getParameters().get("text"),
+                linkList.stream().map(item -> item.uri().toString()).collect(Collectors.joining("\n")));
+    }
+
+    @Test
+    public void emptyListTest() {
+        //given
+        long chatId = 0L;
+        Update update = getUpdate(chatId);
+        when(linkService.getLinks(chatId)).thenReturn(List.of());
+
+        //when
+        SendMessage message = listCommand.handle(update);
+
+        //then
+        assertEquals(message.getParameters().get("text"), EMPTY_LIST_MESSAGE);
     }
 
     private Update getUpdate(long chatId) {
@@ -40,22 +75,5 @@ public class CommandTest {
         when(chatMock.id()).thenReturn(chatId);
         when(messageMock.text()).thenReturn("/list");
         return updateMock;
-    }
-
-    @Test
-    public void notEmptyListTest() {
-        //given
-        long chatId = 0L;
-        List<LinkResponse> linkList = List.of(
-                new LinkResponse(chatId, URI.create("github.com/Alexander-1703/ITnews")),
-                new LinkResponse(chatId, URI.create("stackoverflow.com/questions/123")));
-        Update update = getUpdate(chatId);
-
-        when(linkService.getLinks(chatId)).thenReturn(linkList);
-
-        //when
-        SendMessage message = listCommand.handle(update);
-
-        //then
     }
 }
