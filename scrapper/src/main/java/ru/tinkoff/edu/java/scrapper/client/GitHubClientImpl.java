@@ -4,7 +4,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Mono;
-import ru.tinkoff.edu.java.scrapper.dto.response.GitHubRepositoryResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.response.GitHubRepositoryResponse;
 
 public class GitHubClientImpl implements GitHubClient {
     private static final String GITHUB_URI = "/repos/{owner}/{repo}";

@@ -4,7 +4,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Mono;
-import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowQuestionResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.response.StackOverflowQuestionResponse;
 
 public class StackOverflowClientImpl implements StackOverflowClient {
     private static final String STACKOVERFLOW_URI = "/questions/{id}";

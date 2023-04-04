@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.constraints.PositiveOrZero;
-import ru.tinkoff.edu.java.dto.request.LinkRequest;
-import ru.tinkoff.edu.java.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.dto.response.ListLinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.request.LinkRequest;
+import ru.tinkoff.edu.java.scrapper.dto.response.response.LinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.response.ListLinkResponse;
 
 @RestController
 @Validated
