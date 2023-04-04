@@ -2,7 +2,7 @@ package ru.tinkoff.edu.java.bot.service;
 
 import java.util.List;
 
-import ru.tinkoff.edu.java.bot.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.dto.response.LinkResponse;
 
 public interface LinkService {
 

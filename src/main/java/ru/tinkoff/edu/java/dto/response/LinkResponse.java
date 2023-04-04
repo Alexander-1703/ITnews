@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.dto.response;
+package ru.tinkoff.edu.java.dto.response;
 
 import java.net.URI;
 

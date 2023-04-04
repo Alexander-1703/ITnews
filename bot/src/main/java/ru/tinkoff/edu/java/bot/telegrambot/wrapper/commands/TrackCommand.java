@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.tinkoff.edu.java.bot.enums.CommandEnum;
 
 @Slf4j
 @Component

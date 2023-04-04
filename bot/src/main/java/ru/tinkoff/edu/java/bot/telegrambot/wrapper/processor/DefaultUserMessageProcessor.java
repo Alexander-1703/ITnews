@@ -1,8 +1,7 @@
-package ru.tinkoff.edu.java.bot.telegrambot.wrapper.UserMessageProcess;
+package ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.pengrad.telegrambot.model.Message;
@@ -15,15 +14,14 @@ import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.Command;
 public class DefaultUserMessageProcessor implements UserMessageProcessor {
     private static final String UNKNOWN_COMMAND_MESSAGE = "Такой команды не существует!";
 
-    private final List<? extends Command> commandsList;
+    private final List<Command> commandsList;
 
-    @Autowired
-    public DefaultUserMessageProcessor(List<? extends Command> commandsList) {
+    public DefaultUserMessageProcessor(List<Command> commandsList) {
         this.commandsList = commandsList;
     }
 
     @Override
-    public List<? extends Command> commands() {
+    public List<Command> commands() {
         return commandsList;
     }
 

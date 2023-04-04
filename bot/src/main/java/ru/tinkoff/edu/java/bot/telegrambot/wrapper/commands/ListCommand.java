@@ -12,8 +12,9 @@ import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.tinkoff.edu.java.bot.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.bot.enums.CommandEnum;
 import ru.tinkoff.edu.java.bot.service.LinkService;
+import ru.tinkoff.edu.java.dto.response.LinkResponse;
 
 @Slf4j
 @Component

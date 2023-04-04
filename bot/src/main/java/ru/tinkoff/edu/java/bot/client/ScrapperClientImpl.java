@@ -1,8 +1,5 @@
 package ru.tinkoff.edu.java.bot.client;
 
-import java.net.URI;
-import java.util.List;
-
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -13,10 +10,10 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
-import ru.tinkoff.edu.java.bot.dto.request.LinkRequest;
-import ru.tinkoff.edu.java.bot.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.bot.dto.response.ListLinkResponse;
-import ru.tinkoff.edu.java.dto.ApiErrorResponse;
+import ru.tinkoff.edu.java.dto.response.ApiErrorResponse;
+import ru.tinkoff.edu.java.dto.request.LinkRequest;
+import ru.tinkoff.edu.java.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.dto.response.ListLinkResponse;
 
 @Slf4j
 @RequiredArgsConstructor

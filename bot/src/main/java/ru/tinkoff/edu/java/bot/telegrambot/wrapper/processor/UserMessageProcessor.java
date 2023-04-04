@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.telegrambot.wrapper.UserMessageProcess;
+package ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor;
 
 import java.util.List;
 

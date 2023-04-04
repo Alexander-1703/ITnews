@@ -14,9 +14,9 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 
-import ru.tinkoff.edu.java.bot.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.bot.service.LinkService;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.ListCommand;
+import ru.tinkoff.edu.java.dto.response.LinkResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -48,8 +48,8 @@ public class CommandTest {
         SendMessage message = listCommand.handle(update);
 
         //then
-        assertEquals(message.getParameters().get("text"),
-                linkList.stream().map(item -> item.uri().toString()).collect(Collectors.joining("\n")));
+        assertEquals(linkList.stream().map(item -> item.uri().toString()).collect(Collectors.joining("\n")),
+                message.getParameters().get("text"));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class CommandTest {
         SendMessage message = listCommand.handle(update);
 
         //then
-        assertEquals(message.getParameters().get("text"), EMPTY_LIST_MESSAGE);
+        assertEquals(EMPTY_LIST_MESSAGE, message.getParameters().get("text"));
     }
 
     private Update getUpdate(long chatId) {

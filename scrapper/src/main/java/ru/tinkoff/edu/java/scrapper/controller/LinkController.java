@@ -7,7 +7,6 @@ import java.util.NoSuchElementException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.constraints.PositiveOrZero;
-import ru.tinkoff.edu.java.scrapper.dto.request.LinkRequest;
-import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.response.ListLinkResponse;
+import ru.tinkoff.edu.java.dto.request.LinkRequest;
+import ru.tinkoff.edu.java.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.dto.response.ListLinkResponse;
 
 @RestController
 @Validated

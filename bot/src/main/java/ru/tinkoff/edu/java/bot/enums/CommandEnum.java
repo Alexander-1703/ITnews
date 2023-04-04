@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands;
+package ru.tinkoff.edu.java.bot.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,8 +6,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CommandEnum {
     HELP("help", "Справка об использовании бота"),
-    START("start", "Получить список отслеживаемых ссылок"),
-    LIST("list", "Начало работы"),
+    START("start", "Начало работы"),
+    LIST("list", "Получить список отслеживаемых ссылок"),
     TRACK("track", "Начать отслеживание ссылки"),
     UNTRACK("untrack", "Прекратить отслеживание ссылки");
 
