@@ -28,7 +28,7 @@ public class UnknownCommandTest {
 
 
     @BeforeEach
-    void setup() {
+    public void setup() {
         userMessageProcessor = new DefaultUserMessageProcessor(List.of(
                 new HelpCommand(),
                 new StartCommand(),

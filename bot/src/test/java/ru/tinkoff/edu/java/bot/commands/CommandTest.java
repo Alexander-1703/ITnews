@@ -28,7 +28,7 @@ public class CommandTest {
     private ListCommand listCommand;
 
     @BeforeEach
-    void setup() {
+    public void setup() {
         listCommand = new ListCommand();
         linkService = Mockito.mock(LinkService.class);
         listCommand.setLinkService(linkService);
