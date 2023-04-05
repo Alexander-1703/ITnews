@@ -8,7 +8,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.Command;
 
 public interface UserMessageProcessor {
-    List<? extends Command> commands();
+    List<Command> commands();
 
     SendMessage process(Update update);
 }

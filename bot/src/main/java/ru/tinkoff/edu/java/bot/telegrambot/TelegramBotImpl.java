@@ -8,15 +8,17 @@ import org.springframework.stereotype.Component;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor.CommandListBuilder;
+import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.Command;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor.UserMessageProcessor;
 
 @Component
@@ -40,7 +42,10 @@ public class TelegramBotImpl implements TgBot {
     @PostConstruct
     public void start() {
         setupUpdateListener();
-        execute(CommandListBuilder.buildMenu());
+        BotCommand[] commands = userMessageProcessor.commands().stream()
+                .map(Command::toApiCommand)
+                .toArray(BotCommand[]::new);
+        execute(new SetMyCommands(commands));
     }
 
     private void setupUpdateListener() {
