@@ -1,7 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.client;
 
 import reactor.core.publisher.Mono;
-import ru.tinkoff.edu.java.scrapper.dto.response.GitHubRepositoryResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.response.GitHubRepositoryResponse;
 
 public interface GitHubClient {
     Mono<GitHubRepositoryResponse> fetchRepository(String owner, String repo);
