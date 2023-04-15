@@ -2,53 +2,67 @@ package ru.tinkoff.edu.java.scrapper;
 
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.tinkoff.edu.java.scrapper.environment.IntegrationEnvironment;
+import ru.tinkoff.edu.java.scrapper.environment.JdbcIntegrationEnvironment;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.JdbcLinkRepository;
 
-@SpringBootTest(classes = IntegrationEnvironment.TestDataSourceConfiguration.class)
-public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@Transactional
+@Rollback
+public class JdbcLinkRepositoryTest extends JdbcIntegrationEnvironment {
     @Autowired
     private JdbcLinkRepository linkRepository;
 
-    @Transactional
-    @Rollback
     @Test
     void addLink_notInDB_save() {
         Link link = new Link();
         link.setLink("http://test-link.ru");
-        linkRepository.add(link);
-        List<Link> links = linkRepository.findAll();
-        Assertions.assertEquals(1, links.size());
+        int expectedUpdatedRows = 1;
+        assertEquals(expectedUpdatedRows, linkRepository.add(link));
     }
 
-    @Transactional
-    @Rollback
-    @Sql("INSERT INTO link(link) VALUES('http://test-link.ru')")
+    @Sql(scripts = "/sql/link/add_test_link.sql")
     @Test
     void addLink_existInDB_throwException() {
         Link link = new Link();
         link.setLink("http://test-link.ru");
-        linkRepository.add(link);
-        Assertions.assertThrows(DataIntegrityViolationException.class, () -> linkRepository.add(link));
+        assertThrows(DataIntegrityViolationException.class, () -> linkRepository.add(link));
     }
 
-    @Transactional
-    @Rollback
-    @Sql("INSERT INTO link(link) VALUES('http://test-link.ru')")
+    @Sql(scripts = "/sql/link/add_test_link.sql")
     @Test
     void removeLink_existsInDB_success() {
         List<Link> links = linkRepository.findAll();
-        linkRepository.remove(links.get(0).getId());
-        Assertions.assertEquals(0, linkRepository.findAll().size());
+        int expectedDeletedRows = 1;
+        assertEquals(expectedDeletedRows, linkRepository.remove(links.get(0).getId()));
+    }
+
+    @Test
+    void removeLink_notInDB_changed0() {
+        long notExistingLinkId = 0;
+        int expectedDeletedRows = 0;
+        assertEquals(expectedDeletedRows, linkRepository.remove(notExistingLinkId));
+    }
+
+    @Sql(scripts = "/sql/link/add_three_links.sql")
+    @Test
+    void findAll_returnAllLinks() {
+        int expectedSize = 3;
+        assertEquals(expectedSize, linkRepository.findAll().size());
+    }
+
+    @Test
+    void findAll_emptyLinkTable_returnEmptyList() {
+        int expectedSize = 0;
+        assertEquals(expectedSize, linkRepository.findAll().size());
     }
 }

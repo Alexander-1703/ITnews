@@ -17,6 +17,9 @@ public class JdbcChatRepository implements ChatRepository {
 
     @Override
     public int add(Chat chat) {
+        if (chat.getId() == null) {
+            return jdbcTemplate.update("INSERT INTO chat DEFAULT VALUES");
+        }
         return jdbcTemplate.update("INSERT INTO chat VALUES (?)", chat.getId());
     }
 

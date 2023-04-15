@@ -17,6 +17,9 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public int add(Link link) {
+        if (link.getId() == null) {
+            return jdbcTemplate.update("INSERT INTO link(link) VALUES (?)", link.getLink());
+        }
         return jdbcTemplate.update("INSERT INTO link VALUES (?,?,?)", link.getId(), link.getLink(), link.getUpdatedAt());
     }
 

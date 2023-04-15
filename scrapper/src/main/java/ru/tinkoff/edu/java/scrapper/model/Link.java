@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Link {
-    private long id;
+    private Long id;
     private String link;
     private LocalDateTime updatedAt;
 }
