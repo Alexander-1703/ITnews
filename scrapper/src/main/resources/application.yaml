@@ -12,3 +12,7 @@ springdoc:
 client:
   github-api: "https://api.github.com"
   stackoverflow-api: "https://api.stackexchange.com/2.2"
+
+spring:
+  liquibase:
+    enabled: false

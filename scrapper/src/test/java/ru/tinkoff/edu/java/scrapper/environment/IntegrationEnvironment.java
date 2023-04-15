@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.enviroment;
+package ru.tinkoff.edu.java.scrapper.environment;
 
 
 import java.io.File;
@@ -8,6 +8,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -32,6 +37,19 @@ public abstract class IntegrationEnvironment {
         PSQL_CONTAINER = new PostgreSQLContainer<>("postgres:15");
         PSQL_CONTAINER.start();
         executeDatabaseMigrations();
+    }
+
+    @TestConfiguration
+    public static class TestDataSourceConfiguration {
+
+        @Bean
+        public DataSource dataSource() {
+            return DataSourceBuilder.create()
+                    .url(PSQL_CONTAINER.getJdbcUrl())
+                    .username(PSQL_CONTAINER.getUsername())
+                    .password(PSQL_CONTAINER.getPassword())
+                    .build();
+        }
     }
 
     private static void executeDatabaseMigrations() {
