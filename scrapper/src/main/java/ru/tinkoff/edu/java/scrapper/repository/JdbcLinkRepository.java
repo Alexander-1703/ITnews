@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
+import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
 
@@ -16,16 +17,28 @@ public class JdbcLinkRepository implements LinkRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public int add(Link link) {
-        if (link.getId() == null) {
-            return jdbcTemplate.update("INSERT INTO link(link) VALUES (?)", link.getLink());
-        }
-        return jdbcTemplate.update("INSERT INTO link VALUES (?,?,?)", link.getId(), link.getLink(), link.getUpdatedAt());
+    public Link add(String link) {
+        jdbcTemplate.update("INSERT INTO link(link) VALUES (?)", link);
+        return findByLink(link);
     }
 
     @Override
-    public int remove(long id) {
-        return jdbcTemplate.update("DELETE FROM link WHERE id = ?", id);
+    public boolean remove(long id) {
+        return jdbcTemplate.update("DELETE FROM link WHERE id = ?", id) > 0;
+    }
+
+    @Override
+    public Link findById(long linkId) {
+        String sql = "SELECT * FROM link WHERE id = ?";
+        return jdbcTemplate.queryForStream(sql, ps -> ps.setLong(1, linkId),
+                BeanPropertyRowMapper.newInstance(Link.class)).findFirst().orElse(null);
+    }
+
+    @Override
+    public Link findByLink(String link) {
+        String sql = "SELECT * FROM link WHERE link = ?";
+        return jdbcTemplate.queryForStream(sql, ps -> ps.setString(1, link),
+                BeanPropertyRowMapper.newInstance(Link.class)).findFirst().orElse(null);
     }
 
     @Override

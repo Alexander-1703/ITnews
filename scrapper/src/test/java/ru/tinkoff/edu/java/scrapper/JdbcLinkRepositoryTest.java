@@ -14,7 +14,10 @@ import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.JdbcLinkRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Transactional
 @Rollback
@@ -24,33 +27,26 @@ public class JdbcLinkRepositoryTest extends JdbcIntegrationEnvironment {
 
     @Test
     void addLink_notInDB_save() {
-        Link link = new Link();
-        link.setLink("http://test-link.ru");
-        int expectedUpdatedRows = 1;
-        assertEquals(expectedUpdatedRows, linkRepository.add(link));
+        assertNotNull(linkRepository.add("http://test-link.ru"));
     }
 
     @Sql(scripts = "/sql/link/add_test_link.sql")
     @Test
     void addLink_existInDB_throwException() {
-        Link link = new Link();
-        link.setLink("http://test-link.ru");
-        assertThrows(DataIntegrityViolationException.class, () -> linkRepository.add(link));
+        assertThrows(DataIntegrityViolationException.class, () -> linkRepository.add("http://test-link.ru"));
     }
 
     @Sql(scripts = "/sql/link/add_test_link.sql")
     @Test
-    void removeLink_existsInDB_success() {
+    void removeLink_existsInDB_returnTrue() {
         List<Link> links = linkRepository.findAll();
-        int expectedDeletedRows = 1;
-        assertEquals(expectedDeletedRows, linkRepository.remove(links.get(0).getId()));
+        assertTrue(linkRepository.remove(links.get(0).getId()));
     }
 
     @Test
-    void removeLink_notInDB_changed0() {
+    void removeLink_notInDB_returnFalse() {
         long notExistingLinkId = 0;
-        int expectedDeletedRows = 0;
-        assertEquals(expectedDeletedRows, linkRepository.remove(notExistingLinkId));
+        assertFalse(linkRepository.remove(notExistingLinkId));
     }
 
     @Sql(scripts = "/sql/link/add_three_links.sql")

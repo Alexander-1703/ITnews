@@ -5,9 +5,13 @@ import java.util.List;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 
 public interface LinkRepository {
-    int add(Link link);
+    Link add(String link);
 
-    int remove(long id);
+    boolean remove(long id);
+
+    Link findById(long linkId);
+
+    Link findByLink(String link);
 
     List<Link> findAll();
 }

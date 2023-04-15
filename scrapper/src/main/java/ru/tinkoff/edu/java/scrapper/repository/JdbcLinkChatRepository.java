@@ -17,13 +17,13 @@ public class JdbcLinkChatRepository implements LinkChatRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public int addLinkToChat(long linkId, long chatId) {
-        return jdbcTemplate.update("INSERT INTO link_chat VALUES (?, ?)", linkId, chatId);
+    public boolean addLinkToChat(long linkId, long chatId) {
+        return jdbcTemplate.update("INSERT INTO link_chat VALUES (?, ?)", linkId, chatId) > 0;
     }
 
     @Override
-    public int removeLinkFromChat(long linkId, long chatId) {
-        return jdbcTemplate.update("DELETE  FROM link_chat WHERE chatid = ? AND linkid = ?", chatId, linkId);
+    public boolean removeLinkFromChat(long linkId, long chatId) {
+        return jdbcTemplate.update("DELETE  FROM link_chat WHERE chatid = ? AND linkid = ?", chatId, linkId) > 0;
     }
 
     @Override

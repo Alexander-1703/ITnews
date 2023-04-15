@@ -5,9 +5,11 @@ import java.util.List;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 
 public interface ChatRepository {
-    int add(Chat chat);
+    Chat add(long chatId);
 
-    int remove(long id);
+    boolean remove(long id);
+
+    Chat findById(long chatId);
 
     List<Chat> findAll();
 }

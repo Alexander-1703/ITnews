@@ -16,7 +16,9 @@ import ru.tinkoff.edu.java.scrapper.repository.JdbcLinkChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.JdbcLinkRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Transactional
 @Rollback
@@ -30,15 +32,15 @@ public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_test_link.sql"})
     @Test
-    public void addLinkToChat_chatExist_success() {
+    public void addLinkToChat_chatExist_returnTrue() {
         long chatId = chatRepository.findAll().get(0).getId();
         long linkId = linkRepository.findAll().get(0).getId();
-        assertEquals(1, linkChatRepository.addLinkToChat(linkId, chatId));
+        assertTrue(linkChatRepository.addLinkToChat(linkId, chatId));
     }
 
     @Sql(scripts = "/sql/link/add_test_link.sql")
     @Test
-    public void addLinkToChat_chatNotExist_Throws() {
+    public void addLinkToChat_chatNotExist_throws() {
         long linkId = linkRepository.findAll().get(0).getId();
         long notExistingChatId = 24L;
         assertThrows(DataIntegrityViolationException.class,
@@ -47,24 +49,24 @@ public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_test_link.sql"})
     @Test
-    public void removeLinkFromChat_chatExist_success() {
+    public void removeLinkFromChat_chatExist_returnTrue() {
         long chatId = chatRepository.findAll().get(0).getId();
         long linkId = linkRepository.findAll().get(0).getId();
         linkChatRepository.addLinkToChat(linkId, chatId);
-        assertEquals(1, linkChatRepository.removeLinkFromChat(linkId, chatId));
+        assertTrue(linkChatRepository.removeLinkFromChat(linkId, chatId));
     }
 
     @Sql(scripts = "/sql/link/add_test_link.sql")
     @Test
-    public void removeLinkFromChat_chatNotExist_Throws() {
+    public void removeLinkFromChat_chatNotExist_returnFalse() {
         long notExistingChatId = 24L;
         long linkId = linkRepository.findAll().get(0).getId();
-        assertEquals(0, linkChatRepository.removeLinkFromChat(linkId, notExistingChatId));
+        assertFalse(linkChatRepository.removeLinkFromChat(linkId, notExistingChatId));
     }
 
     @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
     @Test
-    public void addLinkToChat_linkNotExist_Throws() {
+    public void addLinkToChat_linkNotExist_throws() {
         long chatId = chatRepository.findAll().get(0).getId();
         long notExistingLinkId = 24L;
         assertThrows(DataIntegrityViolationException.class,
@@ -73,10 +75,10 @@ public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
 
     @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
     @Test
-    public void removeLinkFromChat_linkNotExist_Throws() {
+    public void removeLinkFromChat_linkNotExist_returnFalse() {
         long chatId = chatRepository.findAll().get(0).getId();
         long notExistingLinkId = 24L;
-        assertEquals(0, linkChatRepository.removeLinkFromChat(notExistingLinkId, chatId));
+        assertFalse(linkChatRepository.removeLinkFromChat(notExistingLinkId, chatId));
     }
 
 
@@ -103,6 +105,7 @@ public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
         int expectedSize = 3;
         assertEquals(expectedSize, linkChatRepository.findLinksByChatId(chatId).size());
     }
+
     @Sql(scripts = {"/sql/chat/add_three_chats.sql", "/sql/link/add_test_link.sql"})
     @Test
     public void linkId_findChatsByLinkId_emptyListOfChats() {

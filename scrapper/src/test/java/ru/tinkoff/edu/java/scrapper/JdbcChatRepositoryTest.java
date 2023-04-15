@@ -1,7 +1,5 @@
 package ru.tinkoff.edu.java.scrapper;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,11 +8,13 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.tinkoff.edu.java.scrapper.environment.JdbcIntegrationEnvironment;
-import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.repository.JdbcChatRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Transactional
 @Rollback
@@ -24,34 +24,27 @@ public class JdbcChatRepositoryTest extends JdbcIntegrationEnvironment {
 
     @Test
     void addChat_notInDB_save() {
-        Chat chat = new Chat();
-        chat.setId(0L);
-        int expectedUpdatedRows = 1;
-        assertEquals(expectedUpdatedRows, chatRepository.add(chat));
+        assertNotNull(chatRepository.add(0L));
     }
 
     @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
     @Test
     void addChat_existInDB_throwException() {
-        Chat chat = new Chat();
-        Long existingId = 0L;
-        chat.setId(existingId);
-        assertThrows(DataIntegrityViolationException.class, () -> chatRepository.add(chat));
+        long existingId = 0L;
+        assertThrows(DataIntegrityViolationException.class, () -> chatRepository.add(existingId));
     }
 
     @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
     @Test
-    void removeChat_existsInDB_success() {
+    void removeChat_existsInDB_returnTrue() {
         long existingId = 0L;
-        int expectedDeletedRows = 1;
-        assertEquals(expectedDeletedRows, chatRepository.remove(existingId));
+        assertTrue(chatRepository.remove(existingId));
     }
 
     @Test
-    void removeLink_notInDB_changed0() {
+    void removeLink_notInDB_returnFalse() {
         int notExistingChatId = 0;
-        int expectedDeletedRows = 0;
-        assertEquals(expectedDeletedRows, chatRepository.remove(notExistingChatId));
+        assertFalse(chatRepository.remove(notExistingChatId));
     }
 
     @Sql(scripts = "/sql/chat/add_three_chats.sql")

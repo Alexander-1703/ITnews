@@ -6,9 +6,9 @@ import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 
 public interface LinkChatRepository {
-    int addLinkToChat(long linkId, long chatId);
+    boolean addLinkToChat(long linkId, long chatId);
 
-    int removeLinkFromChat(long linkId, long chatId);
+    boolean removeLinkFromChat(long linkId, long chatId);
 
     List<Chat> findChatsByLinkId(long linkId);
 

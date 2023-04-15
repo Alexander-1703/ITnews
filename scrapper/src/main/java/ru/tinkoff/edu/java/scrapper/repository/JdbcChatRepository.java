@@ -16,16 +16,21 @@ public class JdbcChatRepository implements ChatRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public int add(Chat chat) {
-        if (chat.getId() == null) {
-            return jdbcTemplate.update("INSERT INTO chat DEFAULT VALUES");
-        }
-        return jdbcTemplate.update("INSERT INTO chat VALUES (?)", chat.getId());
+    public Chat add(long chatId) {
+        jdbcTemplate.update("INSERT INTO chat VALUES (?)", chatId);
+        return findById(chatId);
     }
 
     @Override
-    public int remove(long id) {
-        return jdbcTemplate.update("DELETE FROM chat where id = ?", id);
+    public boolean remove(long id) {
+        return jdbcTemplate.update("DELETE FROM chat where id = ?", id) > 0;
+    }
+
+    @Override
+    public Chat findById(long chatId) {
+        String sql = "SELECT * FROM chat WHERE id = ?";
+        return jdbcTemplate.queryForStream(sql, ps -> ps.setLong(1, chatId),
+                BeanPropertyRowMapper.newInstance(Chat.class)).findFirst().orElse(null);
     }
 
     @Override
