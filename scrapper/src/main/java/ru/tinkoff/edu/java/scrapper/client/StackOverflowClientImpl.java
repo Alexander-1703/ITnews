@@ -23,7 +23,7 @@ public class StackOverflowClientImpl implements StackOverflowClient {
     }
 
     @Override
-    public Mono<StackOverflowQuestionResponse> fetchQuestion(int questionId) {
+    public Mono<StackOverflowQuestionResponse> fetchQuestion(long questionId) {
         return stackoverflowWebClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(STACKOVERFLOW_URI)

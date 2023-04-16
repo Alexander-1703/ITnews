@@ -1,7 +1,7 @@
 scrapper:
-  test: "scrapper"
   scheduler:
     interval: "10s"
+  update-link-interval: "11s"
 
 springdoc:
   swagger-ui:

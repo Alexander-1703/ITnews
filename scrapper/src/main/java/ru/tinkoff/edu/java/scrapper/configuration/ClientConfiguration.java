@@ -36,4 +36,9 @@ public class ClientConfiguration {
     public Duration scheduler(ApplicationConfig appConfig) {
         return appConfig.scheduler().interval();
     }
+
+    @Bean
+    public Duration linkUpdateInterval(ApplicationConfig appConfig) {
+        return appConfig.updateLinkInterval();
+    }
 }

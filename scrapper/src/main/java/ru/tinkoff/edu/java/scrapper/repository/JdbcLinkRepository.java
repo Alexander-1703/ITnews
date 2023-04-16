@@ -1,5 +1,8 @@
 package ru.tinkoff.edu.java.scrapper.repository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -7,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
 
@@ -39,6 +41,14 @@ public class JdbcLinkRepository implements LinkRepository {
         String sql = "SELECT * FROM link WHERE link = ?";
         return jdbcTemplate.queryForStream(sql, ps -> ps.setString(1, link),
                 BeanPropertyRowMapper.newInstance(Link.class)).findFirst().orElse(null);
+    }
+
+    @Override
+    public List<Link> findNotUpdated(Duration interval) {
+        List<Link> linkList = findAll();
+        linkList.sort(Comparator.comparing(
+                link -> Duration.between(LocalDateTime.now(), link.getUpdatedAt()).compareTo(interval) > 0));
+        return linkList;
     }
 
     @Override
