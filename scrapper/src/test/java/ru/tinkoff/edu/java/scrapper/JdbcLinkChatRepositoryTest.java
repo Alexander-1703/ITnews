@@ -23,6 +23,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Transactional
 @Rollback
 public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
+    private static final long NOT_EXISTING_ID = -1L;
+    private static final int EXPECTED_FILLED_TABLE_SIZE = 3;
+    private static final int EXPECTED_EMPTY_TABLE_SIZE = 0;
+
     @Autowired
     private JdbcLinkChatRepository linkChatRepository;
     @Autowired
@@ -42,9 +46,8 @@ public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
     @Test
     public void addLinkToChat_chatNotExist_throws() {
         long linkId = linkRepository.findAll().get(0).getId();
-        long notExistingChatId = 24L;
         assertThrows(DataIntegrityViolationException.class,
-                () -> linkChatRepository.addLinkToChat(linkId, notExistingChatId));
+                () -> linkChatRepository.addLinkToChat(linkId, NOT_EXISTING_ID));
     }
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_test_link.sql"})
@@ -59,26 +62,23 @@ public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
     @Sql(scripts = "/sql/link/add_test_link.sql")
     @Test
     public void removeLinkFromChat_chatNotExist_returnFalse() {
-        long notExistingChatId = 24L;
         long linkId = linkRepository.findAll().get(0).getId();
-        assertFalse(linkChatRepository.removeLinkFromChat(linkId, notExistingChatId));
+        assertFalse(linkChatRepository.removeLinkFromChat(linkId, NOT_EXISTING_ID));
     }
 
     @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
     @Test
     public void addLinkToChat_linkNotExist_throws() {
         long chatId = chatRepository.findAll().get(0).getId();
-        long notExistingLinkId = 24L;
         assertThrows(DataIntegrityViolationException.class,
-                () -> linkChatRepository.addLinkToChat(notExistingLinkId, chatId));
+                () -> linkChatRepository.addLinkToChat(NOT_EXISTING_ID, chatId));
     }
 
     @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
     @Test
     public void removeLinkFromChat_linkNotExist_returnFalse() {
         long chatId = chatRepository.findAll().get(0).getId();
-        long notExistingLinkId = 24L;
-        assertFalse(linkChatRepository.removeLinkFromChat(notExistingLinkId, chatId));
+        assertFalse(linkChatRepository.removeLinkFromChat(NOT_EXISTING_ID, chatId));
     }
 
 
@@ -90,8 +90,7 @@ public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
         for (var chatId : listChatId) {
             linkChatRepository.addLinkToChat(linkId, chatId);
         }
-        int expectedSize = 3;
-        assertEquals(expectedSize, linkChatRepository.findChatsByLinkId(linkId).size());
+        assertEquals(EXPECTED_FILLED_TABLE_SIZE, linkChatRepository.findChatsByLinkId(linkId).size());
     }
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_three_links.sql"})
@@ -102,24 +101,20 @@ public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
         for (var linkId : listLinkId) {
             linkChatRepository.addLinkToChat(linkId, chatId);
         }
-        int expectedSize = 3;
-        assertEquals(expectedSize, linkChatRepository.findLinksByChatId(chatId).size());
+        assertEquals(EXPECTED_FILLED_TABLE_SIZE, linkChatRepository.findLinksByChatId(chatId).size());
     }
 
     @Sql(scripts = {"/sql/chat/add_three_chats.sql", "/sql/link/add_test_link.sql"})
     @Test
     public void linkId_findChatsByLinkId_emptyListOfChats() {
         long linkId = linkRepository.findAll().get(0).getId();
-        int expectedSize = 0;
-        assertEquals(expectedSize, linkChatRepository.findChatsByLinkId(linkId).size());
+        assertEquals(EXPECTED_EMPTY_TABLE_SIZE, linkChatRepository.findChatsByLinkId(linkId).size());
     }
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_three_links.sql"})
     @Test
     public void chatId_findLinksByChatId_emptyListOfLinks() {
         long chatId = chatRepository.findAll().get(0).getId();
-        int expectedSize = 0;
-        assertEquals(expectedSize, linkChatRepository.findLinksByChatId(chatId).size());
+        assertEquals(EXPECTED_EMPTY_TABLE_SIZE, linkChatRepository.findLinksByChatId(chatId).size());
     }
-
 }

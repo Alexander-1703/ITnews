@@ -26,7 +26,9 @@ public class JdbcLinkService implements LinkService {
     public Link add(long tgChatId, URI url) {
         Link link = linkRepository.findByLink(url.toString());
         if (link == null) {
-            link = linkRepository.add(url.toString());
+            link = new Link();
+            link.setLink(url.toString());
+            link = linkRepository.save(link);
             log.info("add link: " + link.getLink());
         }
         subscription.addLinkToChat(link.getId(), tgChatId);

@@ -6,7 +6,7 @@ import java.util.List;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 
 public interface LinkRepository {
-    Link add(String link);
+    Link save(Link link);
 
     boolean remove(long id);
 

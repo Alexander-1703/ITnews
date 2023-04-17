@@ -10,6 +10,8 @@ public interface LinkChatRepository {
 
     boolean removeLinkFromChat(long linkId, long chatId);
 
+    boolean isSubscribed(long linkId, long chatId);
+
     List<Chat> findChatsByLinkId(long linkId);
 
     List<Link> findLinksByChatId(long chatId);

@@ -1,13 +1,13 @@
 package ru.tinkoff.edu.java.scrapper.service.updater;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.linkparser.HandlerBuilder;
 import ru.tinkoff.edu.java.linkparser.Request.Request;
 import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
@@ -36,6 +36,7 @@ public class LinkUpdaterImpl implements LinkUpdater {
     @Override
     public int update() {
         List<Link> linkList = linkRepository.findNotUpdated(interval);
+        List<Link> updatedLinksList = new ArrayList<>();
         for (Link link : linkList) {
             UrlData urlData = parseLink(link.getLink());
 
@@ -43,25 +44,39 @@ public class LinkUpdaterImpl implements LinkUpdater {
                 continue;
             }
 
+            Link updatedLink = null;
             switch (urlData.getClass().getSimpleName()) {
-                case "GitHubData" -> {
-                    GitHubData gitHubData = (GitHubData) urlData;
+                case "GitHubData" -> updatedLink = handleGitHubLink(link, (GitHubData) urlData);
+                case "StackOverflowData" -> updatedLink = handleStackOverflowLink(link, (StackOverflowData) urlData);
+            }
 
-                }
-                case "StackOverflowData" -> {
-                    StackOverflowData stackOverflowData = (StackOverflowData) urlData;
-                    StackOverflowQuestionResponse response =
-                            stackOverflowClient.fetchQuestion(stackOverflowData.id()).block();
-                }
+            if (updatedLink != null) {
+                updatedLinksList.add(updatedLink);
             }
         }
-        return 0;
+
+        updatedLinksList.forEach(linkRepository::save);
+        return updatedLinksList.size();
     }
 
-    private GitHubData handleGitHubLink(GitHubData gitHubData) {
+    private Link handleGitHubLink(Link link, GitHubData gitHubData) {
         GitHubRepositoryResponse response =
                 gitHubClient.fetchRepository(gitHubData.username(), gitHubData.repos()).block();
-        if (response != null  )
+        if (response != null) {
+            link.setUpdatedAt(response.updatedAt());
+            return link;
+        }
+        return null;
+    }
+
+    private Link handleStackOverflowLink(Link link, StackOverflowData stackOverflowData) {
+        StackOverflowQuestionResponse response =
+                stackOverflowClient.fetchQuestion(stackOverflowData.id()).block();
+        if (response != null) {
+            link.setUpdatedAt(response.UpdatedAt());
+            return link;
+        }
+        return null;
     }
 
     private UrlData parseLink(String link) {

@@ -16,30 +16,43 @@ import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
 @Repository
 @RequiredArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
+    private static final String ADD_LINK = "INSERT INTO link(link) VALUES (?)";
+    private static final String DELETE_LINK_BY_ID = "DELETE FROM link WHERE id = ?";
+    private static final String FIND_LINK_BY_ID = "SELECT * FROM link WHERE id = ?";
+    private static final String FIND_LINK_BY_LINK = "SELECT * FROM link WHERE link = ?";
+    private static final String FIND_ALL_LINKS = "SELECT * FROM link";
+    private static final String UPDATE_LINK = "UPDATE link SET link = ?, updatedAt = ? WHERE id = ?";
+
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Link add(String link) {
-        jdbcTemplate.update("INSERT INTO link(link) VALUES (?)", link);
-        return findByLink(link);
+    public Link save(Link link) {
+        if (link.getId() == null) {
+            Link linkFromDB = findByLink(link.getLink());
+            if (linkFromDB == null) {
+                jdbcTemplate.update(ADD_LINK, link.getLink());
+                return findByLink(link.getLink());
+            }
+            return linkFromDB;
+        }
+        jdbcTemplate.update(UPDATE_LINK, link.getLink(), link.getUpdatedAt(), link.getId());
+        return link;
     }
 
     @Override
     public boolean remove(long id) {
-        return jdbcTemplate.update("DELETE FROM link WHERE id = ?", id) > 0;
+        return jdbcTemplate.update(DELETE_LINK_BY_ID, id) > 0;
     }
 
     @Override
     public Link findById(long linkId) {
-        String sql = "SELECT * FROM link WHERE id = ?";
-        return jdbcTemplate.queryForStream(sql, ps -> ps.setLong(1, linkId),
+        return jdbcTemplate.queryForStream(FIND_LINK_BY_ID, ps -> ps.setLong(1, linkId),
                 BeanPropertyRowMapper.newInstance(Link.class)).findFirst().orElse(null);
     }
 
     @Override
     public Link findByLink(String link) {
-        String sql = "SELECT * FROM link WHERE link = ?";
-        return jdbcTemplate.queryForStream(sql, ps -> ps.setString(1, link),
+        return jdbcTemplate.queryForStream(FIND_LINK_BY_LINK, ps -> ps.setString(1, link),
                 BeanPropertyRowMapper.newInstance(Link.class)).findFirst().orElse(null);
     }
 
@@ -53,6 +66,6 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public List<Link> findAll() {
-        return jdbcTemplate.query("SELECT * FROM link", new BeanPropertyRowMapper<>(Link.class));
+        return jdbcTemplate.query(FIND_ALL_LINKS, new BeanPropertyRowMapper<>(Link.class));
     }
 }

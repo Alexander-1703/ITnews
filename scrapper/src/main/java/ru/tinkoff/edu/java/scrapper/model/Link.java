@@ -1,6 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class Link {
     private Long id;
     private String link;
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 }

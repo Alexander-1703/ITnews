@@ -13,28 +13,36 @@ import ru.tinkoff.edu.java.scrapper.repository.interfaces.ChatRepository;
 @Repository
 @RequiredArgsConstructor
 public class JdbcChatRepository implements ChatRepository {
+    private static final String FIND_CHAT_BY_ID = "SELECT * FROM chat WHERE id = ?";
+    private static final String ADD_CHAT = "INSERT INTO chat VALUES (?)";
+    private static final String DELETE_CHAT_BY_ID = "DELETE FROM chat where id = ?";
+    private static final String FIND_ALL_CHATS = "SELECT * FROM chat";
+
     private final JdbcTemplate jdbcTemplate;
 
     @Override
     public Chat add(long chatId) {
-        jdbcTemplate.update("INSERT INTO chat VALUES (?)", chatId);
-        return findById(chatId);
+        Chat chatFromDB = findById(chatId);
+        if (chatFromDB == null) {
+            jdbcTemplate.update(ADD_CHAT, chatId);
+            return findById(chatId);
+        }
+        return chatFromDB;
     }
 
     @Override
     public boolean remove(long id) {
-        return jdbcTemplate.update("DELETE FROM chat where id = ?", id) > 0;
+        return jdbcTemplate.update(DELETE_CHAT_BY_ID, id) > 0;
     }
 
     @Override
     public Chat findById(long chatId) {
-        String sql = "SELECT * FROM chat WHERE id = ?";
-        return jdbcTemplate.queryForStream(sql, ps -> ps.setLong(1, chatId),
+        return jdbcTemplate.queryForStream(FIND_CHAT_BY_ID, ps -> ps.setLong(1, chatId),
                 BeanPropertyRowMapper.newInstance(Chat.class)).findFirst().orElse(null);
     }
 
     @Override
     public List<Chat> findAll() {
-        return jdbcTemplate.query("SELECT * FROM chat", new BeanPropertyRowMapper<>(Chat.class));
+        return jdbcTemplate.query(FIND_ALL_CHATS, new BeanPropertyRowMapper<>(Chat.class));
     }
 }
