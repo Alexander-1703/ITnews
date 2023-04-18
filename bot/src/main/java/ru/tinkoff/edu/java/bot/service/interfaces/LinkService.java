@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.service;
+package ru.tinkoff.edu.java.bot.service.interfaces;
 
 import java.util.List;
 

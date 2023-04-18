@@ -21,7 +21,7 @@ public class ClientConfiguration {
 
     public ClientConfiguration(@Value("${client.github-api:https://api.github.com}") String githubUrl,
                                @Value("${client.stackoverflow-api:https://api.stackexchange.com/2.3}") String stackoverflowUrl,
-                               @Value("${client.bot-url:http://localhost:8080}") String botUrl) {
+                               @Value("${client.bot-url:http://localhost:8081}") String botUrl) {
         this.githubUrl = githubUrl;
         this.stackoverflowUrl = stackoverflowUrl;
         this.botUrl = botUrl;

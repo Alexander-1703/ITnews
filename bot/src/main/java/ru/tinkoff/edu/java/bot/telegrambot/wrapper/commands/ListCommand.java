@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.bot.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.bot.enums.CommandEnum;
-import ru.tinkoff.edu.java.bot.service.LinkService;
+import ru.tinkoff.edu.java.bot.service.interfaces.LinkService;
 
 @Slf4j
 @Component
