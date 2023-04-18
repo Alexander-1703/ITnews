@@ -5,6 +5,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -42,48 +44,87 @@ public class LinkUpdaterImpl implements LinkUpdater {
     @Override
     public int update() {
         List<Link> linkList = linkRepository.findNotUpdated(interval);
-        List<Link> updatedLinksList = new ArrayList<>();
+        List<Pair<Link, String>> updatedLinksList = new ArrayList<>();
         for (Link link : linkList) {
-            UrlData urlData = parseLink(link.getLink());
+            Pair<Link, String> linkWithDesc = update(link);
 
-            if (urlData == null) {
-                continue;
-            }
-
-            Link updatedLink = null;
-            switch (urlData.getClass().getSimpleName()) {
-                case "GitHubData" -> updatedLink = handleGitHubLink(link, (GitHubData) urlData);
-                case "StackOverflowData" -> updatedLink = handleStackOverflowLink(link, (StackOverflowData) urlData);
-            }
-
-            if (updatedLink != null) {
-                updatedLinksList.add(updatedLink);
+            if (linkWithDesc != null) {
+                updatedLinksList.add(linkWithDesc);
             }
         }
 
-        updatedLinksList.forEach(linkRepository::save);
+        updatedLinksList.forEach(pair -> linkRepository.save(pair.getKey()));
         notifyBot(updatedLinksList);
         return updatedLinksList.size();
     }
 
-    private Link handleGitHubLink(Link link, GitHubData gitHubData) {
+    @Override
+    public Pair<Link, String> update(Link link) {
+        UrlData urlData = parseLink(link.getLink());
+
+        if (urlData == null) {
+            return null;
+        }
+
+        Pair<Link, String> linkWithDesc = null;
+        switch (urlData.getClass().getSimpleName()) {
+            case "GitHubData" -> linkWithDesc = handleGitHubLink(link, (GitHubData) urlData);
+            case "StackOverflowData" -> linkWithDesc = handleStackOverflowLink(link, (StackOverflowData) urlData);
+        }
+        return linkWithDesc;
+    }
+
+    private Pair<Link, String> handleGitHubLink(Link link, GitHubData gitHubData) {
         GitHubRepositoryResponse response =
                 gitHubClient.fetchRepository(gitHubData.username(), gitHubData.repos()).block();
-        if (response != null) {
+        if (response != null && link.getUpdatedAt() != response.updatedAt()) {
+            String description = checkGithubChanges(link, response);
+
             link.setUpdatedAt(response.updatedAt());
-            return link;
+            link.setGhForksCount(response.forksCount());
+            link.setGhBranchesCount(response.branchesCount());
+            return new ImmutablePair<>(link, description);
         }
         return null;
     }
 
-    private Link handleStackOverflowLink(Link link, StackOverflowData stackOverflowData) {
+    private String checkGithubChanges(Link link, GitHubRepositoryResponse response) {
+        //sb используется с расчетом на то, что в дальнейшем будет больше проверок
+        StringBuilder description = new StringBuilder();
+        if (link.getGhForksCount() > response.forksCount()) {
+            description.append("Количество форков уменьшилось, ");
+        } else if (link.getGhForksCount() < response.forksCount()) {
+            description.append("Количество форков увеличилось, ");
+        }
+
+        if (link.getGhBranchesCount() > response.branchesCount()) {
+            description.append("Количество веток уменьшилось");
+        } else if (link.getGhBranchesCount() < response.branchesCount()) {
+            description.append("Количество веток увеличилось");
+        }
+        return description.toString();
+    }
+
+    private Pair<Link, String> handleStackOverflowLink(Link link, StackOverflowData stackOverflowData) {
         StackOverflowQuestionResponse response =
                 stackOverflowClient.fetchQuestion(stackOverflowData.id()).block();
-        if (response != null) {
+        if (response != null && link.getUpdatedAt() != response.UpdatedAt()) {
+            String description = checkStackoverflowChanges(link, response);
+
             link.setUpdatedAt(response.UpdatedAt());
-            return link;
+            link.setSoAnswersCount(response.answerCount());
+            return new ImmutablePair<>(link, description);
         }
         return null;
+    }
+
+    private String checkStackoverflowChanges(Link link, StackOverflowQuestionResponse response) {
+        //sb используется с расчетом на то, что в дальнейшем будет больше проверок
+        StringBuilder description = new StringBuilder();
+        if (link.getSoAnswersCount() < response.answerCount()) {
+            description.append("Появились новые ответы");
+        }
+        return description.toString();
     }
 
     private UrlData parseLink(String link) {
@@ -91,12 +132,14 @@ public class LinkUpdaterImpl implements LinkUpdater {
         return handler.parse(new Request(link));
     }
 
-    private void notifyBot(List<Link> linkList) {
-        linkList.forEach(link -> {
+    private void notifyBot(List<Pair<Link, String>> linksWithDesc) {
+        linksWithDesc.forEach(pair -> {
+            Link link = pair.getKey();
+            String desc = pair.getValue();
             LinkUpdateRequest request = new LinkUpdateRequest(
                     link.getId(),
                     URI.create(link.getLink()),
-                    "что-то обновилось",
+                    desc,
                     subscription.findChatsByLinkId(link.getId()).stream()
                             .map(Chat::getId)
                             .toList()

@@ -22,7 +22,8 @@ public class JdbcLinkRepository implements LinkRepository {
     private static final String FIND_LINK_BY_ID = "SELECT * FROM link WHERE id = ?";
     private static final String FIND_LINK_BY_LINK = "SELECT * FROM link WHERE link = ?";
     private static final String FIND_ALL_LINKS = "SELECT * FROM link";
-    private static final String UPDATE_LINK = "UPDATE link SET link = ?, updatedAt = ? WHERE id = ?";
+    private static final String UPDATE_LINK =
+            "UPDATE link SET link = ?, updatedat = ?, ghforks = ?, ghbranches = ?, soanswers = ? WHERE id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -32,7 +33,10 @@ public class JdbcLinkRepository implements LinkRepository {
             jdbcTemplate.update(ADD_LINK, link.getLink());
             return findByLink(link.getLink());
         }
-        jdbcTemplate.update(UPDATE_LINK, link.getLink(), OffsetDateTime.now(), link.getId());
+        OffsetDateTime updatedAt = link.getUpdatedAt();
+        updatedAt = updatedAt != null ? updatedAt : OffsetDateTime.now();
+        jdbcTemplate.update(UPDATE_LINK, link.getLink(), updatedAt, link.getGhForksCount(),
+                link.getGhBranchesCount(), link.getSoAnswersCount(), link.getId());
         return link;
     }
 

@@ -13,4 +13,7 @@ public class Link {
     private Long id;
     private String link;
     private OffsetDateTime updatedAt;
+    private int ghForksCount;
+    private int ghBranchesCount;
+    private int soAnswersCount;
 }
