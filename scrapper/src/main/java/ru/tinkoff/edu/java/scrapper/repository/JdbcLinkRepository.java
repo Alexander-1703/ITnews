@@ -2,6 +2,7 @@ package ru.tinkoff.edu.java.scrapper.repository;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class JdbcLinkRepository implements LinkRepository {
             jdbcTemplate.update(ADD_LINK, link.getLink());
             return findByLink(link.getLink());
         }
-        jdbcTemplate.update(UPDATE_LINK, link.getLink(), link.getUpdatedAt(), link.getId());
+        jdbcTemplate.update(UPDATE_LINK, link.getLink(), OffsetDateTime.now(), link.getId());
         return link;
     }
 
