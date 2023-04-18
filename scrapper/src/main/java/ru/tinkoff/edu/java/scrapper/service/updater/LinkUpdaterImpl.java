@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.updater;
 
+import java.net.URI;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +15,15 @@ import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
 import ru.tinkoff.edu.java.linkparser.dtos.StackOverflowData;
 import ru.tinkoff.edu.java.linkparser.dtos.UrlData;
 import ru.tinkoff.edu.java.linkparser.handlers.Handler;
-import ru.tinkoff.edu.java.scrapper.client.GitHubClient;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
-import ru.tinkoff.edu.java.scrapper.dto.response.response.GitHubRepositoryResponse;
-import ru.tinkoff.edu.java.scrapper.dto.response.response.StackOverflowQuestionResponse;
+import ru.tinkoff.edu.java.scrapper.client.interfaces.BotClient;
+import ru.tinkoff.edu.java.scrapper.client.interfaces.GitHubClient;
+import ru.tinkoff.edu.java.scrapper.client.interfaces.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.dto.request.LinkUpdateRequest;
+import ru.tinkoff.edu.java.scrapper.dto.response.GitHubRepositoryResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowQuestionResponse;
+import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
+import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.interfaces.LinkUpdater;
 
@@ -26,9 +31,10 @@ import ru.tinkoff.edu.java.scrapper.service.interfaces.LinkUpdater;
 @RequiredArgsConstructor
 public class LinkUpdaterImpl implements LinkUpdater {
     private final LinkRepository linkRepository;
-
+    private final LinkChatRepository subscription;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
+    private final BotClient botClient;
 
     @Value("#{@linkUpdateInterval}")
     Duration interval;
@@ -56,6 +62,7 @@ public class LinkUpdaterImpl implements LinkUpdater {
         }
 
         updatedLinksList.forEach(linkRepository::save);
+        notifyBot(updatedLinksList);
         return updatedLinksList.size();
     }
 
@@ -82,5 +89,19 @@ public class LinkUpdaterImpl implements LinkUpdater {
     private UrlData parseLink(String link) {
         Handler handler = HandlerBuilder.build();
         return handler.parse(new Request(link));
+    }
+
+    private void notifyBot(List<Link> linkList) {
+        linkList.forEach(link -> {
+            LinkUpdateRequest request = new LinkUpdateRequest(
+                    link.getId(),
+                    URI.create(link.getLink()),
+                     "что-то обновилось",
+                    subscription.findChatsByLinkId(link.getId()).stream()
+                            .map(Chat::getId)
+                            .toList()
+            );
+            botClient.postUpdate(request);
+        });
     }
 }

@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.dto.response.response;
+package ru.tinkoff.edu.java.scrapper.dto.response;
 
 import java.time.OffsetDateTime;
 

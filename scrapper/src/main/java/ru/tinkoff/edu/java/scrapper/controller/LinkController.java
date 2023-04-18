@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.scrapper.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,12 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import ru.tinkoff.edu.java.scrapper.dto.response.request.LinkRequest;
-import ru.tinkoff.edu.java.scrapper.dto.response.response.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.response.response.ListLinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.request.LinkRequest;
+import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.ListLinkResponse;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.interfaces.LinkService;
 
 @RestController

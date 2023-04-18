@@ -12,6 +12,7 @@ springdoc:
 client:
   github-api: "https://api.github.com"
   stackoverflow-api: "https://api.stackexchange.com/2.2"
+  bot-url: "http://localhost:8080"
 
 spring:
   liquibase:
