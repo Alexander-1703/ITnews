@@ -84,7 +84,7 @@ public class TelegramBotImpl implements TgBot {
         String message = "Появилось обновление в " + update.uri().toString() + ":\n" +
                 update.description();
         update.tgChatIds().forEach(chatId -> {
-            SendMessage sendMessage = new SendMessage(chatId, message);
+            SendMessage sendMessage = new SendMessage(chatId, message).disableWebPagePreview(true);
             execute(sendMessage);
         });
     }

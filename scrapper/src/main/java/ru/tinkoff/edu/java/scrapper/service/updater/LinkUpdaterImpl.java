@@ -96,7 +96,7 @@ public class LinkUpdaterImpl implements LinkUpdater {
             LinkUpdateRequest request = new LinkUpdateRequest(
                     link.getId(),
                     URI.create(link.getLink()),
-                     "что-то обновилось",
+                    "что-то обновилось",
                     subscription.findChatsByLinkId(link.getId()).stream()
                             .map(Chat::getId)
                             .toList()

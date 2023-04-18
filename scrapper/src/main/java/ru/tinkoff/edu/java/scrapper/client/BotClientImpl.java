@@ -32,6 +32,7 @@ public class BotClientImpl implements BotClient {
     public boolean postUpdate(LinkUpdateRequest request) {
         HttpStatusCode httpStatusCode = Objects.requireNonNull(botWebClient.post()
                         .uri(BOT_URI)
+                        .bodyValue(request)
                         .retrieve()
                         .toBodilessEntity()
                         .block())
