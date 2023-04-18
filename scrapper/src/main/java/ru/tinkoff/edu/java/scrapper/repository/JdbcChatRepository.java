@@ -22,12 +22,8 @@ public class JdbcChatRepository implements ChatRepository {
 
     @Override
     public Chat add(long chatId) {
-        Chat chatFromDB = findById(chatId);
-        if (chatFromDB == null) {
-            jdbcTemplate.update(ADD_CHAT, chatId);
-            return findById(chatId);
-        }
-        return chatFromDB;
+        jdbcTemplate.update(ADD_CHAT, chatId);
+        return findById(chatId);
     }
 
     @Override

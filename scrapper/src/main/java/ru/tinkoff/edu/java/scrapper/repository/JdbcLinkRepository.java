@@ -28,12 +28,8 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public Link save(Link link) {
         if (link.getId() == null) {
-            Link linkFromDB = findByLink(link.getLink());
-            if (linkFromDB == null) {
-                jdbcTemplate.update(ADD_LINK, link.getLink());
-                return findByLink(link.getLink());
-            }
-            return linkFromDB;
+            jdbcTemplate.update(ADD_LINK, link.getLink());
+            return findByLink(link.getLink());
         }
         jdbcTemplate.update(UPDATE_LINK, link.getLink(), link.getUpdatedAt(), link.getId());
         return link;

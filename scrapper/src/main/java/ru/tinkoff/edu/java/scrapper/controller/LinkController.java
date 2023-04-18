@@ -21,6 +21,7 @@ import ru.tinkoff.edu.java.scrapper.dto.response.response.ListLinkResponse;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
+import ru.tinkoff.edu.java.scrapper.service.interfaces.LinkService;
 
 @RestController
 @Validated
@@ -29,12 +30,11 @@ import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
 public class LinkController {
     private static final String CHAT_ID = "chat_id";
 
-    private final LinkRepository linkRepository;
-    private final LinkChatRepository subscription;
+    private final LinkService linkService;
 
     @GetMapping()
     public ListLinkResponse getLinks(@RequestHeader(CHAT_ID) @PositiveOrZero Long id) {
-        List<LinkResponse> response = subscription.findLinksByChatId(id).stream()
+        List<LinkResponse> response = linkService.listAll(id).stream()
                 .map(link -> new LinkResponse(link.getId(), URI.create(link.getLink())))
                 .toList();
         return new ListLinkResponse(response, response.size());
@@ -42,21 +42,15 @@ public class LinkController {
 
     @PostMapping()
     public LinkResponse addLink(@RequestHeader(CHAT_ID) @PositiveOrZero Long id, @RequestBody LinkRequest addRequest) {
-        Link link = new Link();
-        link.setLink(addRequest.link());
-        link = linkRepository.save(link);
-        subscription.addLinkToChat(link.getId(), id);
-        return new LinkResponse(link.getId(), URI.create(link.getLink()));
+        URI uri = URI.create(addRequest.link());
+        Link link = linkService.add(id, uri);
+        return new LinkResponse(link.getId(), uri);
     }
 
     @DeleteMapping()
     public LinkResponse removeLink(@RequestHeader(CHAT_ID) @PositiveOrZero Long id, @RequestBody LinkRequest removeRequest) {
-        Link link = linkRepository.findByLink(removeRequest.link());
-        if (link != null) {
-            linkRepository.remove(id);
-            return new LinkResponse(link.getId(), URI.create(link.getLink()));
-        }
-        throw new NoSuchElementException("No element with such id");
+        URI uri = URI.create(removeRequest.link());
+        Link link = linkService.remove(id, uri);
+        return new LinkResponse(link.getId(), uri);
     }
-
 }

@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.ChatRepository;
+import ru.tinkoff.edu.java.scrapper.service.interfaces.TgChatService;
 
 @RestController
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/tg-chat")
 public class TgChatController {
-    private final ChatRepository chatRepository;
+    private final TgChatService chatService;
 
     @PostMapping("/{id}")
     public void registerChat(@PathVariable @PositiveOrZero Long id) {
-        chatRepository.add(id);
+        chatService.register(id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteChat(@PathVariable @PositiveOrZero Long id) {
-        chatRepository.remove(id);
+        chatService.unregister(id);
     }
 
 }
