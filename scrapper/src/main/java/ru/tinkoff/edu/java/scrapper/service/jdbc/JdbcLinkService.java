@@ -1,19 +1,13 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
-import ru.tinkoff.edu.java.linkparser.dtos.StackOverflowData;
-import ru.tinkoff.edu.java.linkparser.dtos.UrlData;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
@@ -28,7 +22,6 @@ public class JdbcLinkService implements LinkService {
     private final LinkChatRepository subscription;
     private final LinkUpdater linkUpdater;
 
-
     @Override
     @Transactional
     public Link add(long tgChatId, URI url) {
@@ -40,10 +33,11 @@ public class JdbcLinkService implements LinkService {
             log.info("add link: " + link.getLink());
 
             try {
-                Link updatedLink = linkUpdater.update(link).getKey();
+                Link updatedLink = linkUpdater.update(link).link();
                 linkRepository.save(updatedLink);
+
             } catch (NullPointerException e) {
-                log.error("first updating error: " + url.toString());
+                log.error("first updating error: " + url);
             }
         }
         subscription.addLinkToChat(link.getId(), tgChatId);

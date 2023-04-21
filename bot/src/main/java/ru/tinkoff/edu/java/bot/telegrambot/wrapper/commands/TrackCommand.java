@@ -18,6 +18,7 @@ public class TrackCommand implements Command {
             Ссылка добавлена в список отслеживания.
             Вы получите уведомление обо всех изменениях
             """;
+    private static final String ERROR_MESSAGE = "Вы не прислали ссылку";
     private final LinkService linkService;
 
     @Override
@@ -35,6 +36,9 @@ public class TrackCommand implements Command {
         log.info("link tracking start...");
         long chatId = update.message().chat().id();
         String link = update.message().text().split(" ")[1];
+        if (link == null) {
+            return new SendMessage(chatId, ERROR_MESSAGE);
+        }
         linkService.trackLink(chatId, link);
         return new SendMessage(chatId, TRACK_MESSAGE);
     }

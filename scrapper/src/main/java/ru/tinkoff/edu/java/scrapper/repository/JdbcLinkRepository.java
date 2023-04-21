@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
 
@@ -33,9 +34,8 @@ public class JdbcLinkRepository implements LinkRepository {
             jdbcTemplate.update(ADD_LINK, link.getLink());
             return findByLink(link.getLink());
         }
-        OffsetDateTime updatedAt = link.getUpdatedAt();
-        updatedAt = updatedAt != null ? updatedAt : OffsetDateTime.now();
-        jdbcTemplate.update(UPDATE_LINK, link.getLink(), updatedAt, link.getGhForksCount(),
+
+        jdbcTemplate.update(UPDATE_LINK, link.getLink(), link.getUpdatedAt(), link.getGhForksCount(),
                 link.getGhBranchesCount(), link.getSoAnswersCount(), link.getId());
         return link;
     }

@@ -6,6 +6,7 @@ import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowQuestionResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowQuestionsListResponse;
 
 public class StackOverflowClientImpl implements StackOverflowClient {
     private static final String STACKOVERFLOW_URI = "/questions/{id}";
@@ -31,6 +32,12 @@ public class StackOverflowClientImpl implements StackOverflowClient {
                         .queryParam("site", "stackoverflow")
                         .build(questionId))
                 .retrieve()
-                .bodyToMono(StackOverflowQuestionResponse.class);
+                .bodyToMono(StackOverflowQuestionsListResponse.class)
+                .flatMap(wrapper -> {
+                    if (wrapper.items().isEmpty()) {
+                        return Mono.empty();
+                    }
+                    return Mono.just(wrapper.items().get(0));
+                });
     }
 }

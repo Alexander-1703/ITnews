@@ -5,12 +5,11 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.linkparser.HandlerBuilder;
 import ru.tinkoff.edu.java.linkparser.Request.Request;
 import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
@@ -20,6 +19,7 @@ import ru.tinkoff.edu.java.linkparser.handlers.Handler;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.dto.UpdatedLink;
 import ru.tinkoff.edu.java.scrapper.dto.request.LinkUpdateRequest;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubRepositoryResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowQuestionResponse;
@@ -30,6 +30,7 @@ import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.interfaces.LinkUpdater;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class LinkUpdaterImpl implements LinkUpdater {
     private final LinkRepository linkRepository;
@@ -44,86 +45,94 @@ public class LinkUpdaterImpl implements LinkUpdater {
     @Override
     public int update() {
         List<Link> linkList = linkRepository.findNotUpdated(interval);
-        List<Pair<Link, String>> updatedLinksList = new ArrayList<>();
+        List<UpdatedLink> updatedLinksList = new ArrayList<>();
         for (Link link : linkList) {
-            Pair<Link, String> linkWithDesc = update(link);
+            UpdatedLink updatedLink = update(link);
 
-            if (linkWithDesc != null) {
-                updatedLinksList.add(linkWithDesc);
+            if (updatedLink != null) {
+                updatedLinksList.add(updatedLink);
             }
         }
 
-        updatedLinksList.forEach(pair -> linkRepository.save(pair.getKey()));
+        updatedLinksList.forEach(updatedLink -> linkRepository.save(updatedLink.link()));
         notifyBot(updatedLinksList);
         return updatedLinksList.size();
     }
 
     @Override
-    public Pair<Link, String> update(Link link) {
+    public UpdatedLink update(Link link) {
         UrlData urlData = parseLink(link.getLink());
-
         if (urlData == null) {
             return null;
         }
 
-        Pair<Link, String> linkWithDesc = null;
+        UpdatedLink updatedLink = null;
         switch (urlData.getClass().getSimpleName()) {
-            case "GitHubData" -> linkWithDesc = handleGitHubLink(link, (GitHubData) urlData);
-            case "StackOverflowData" -> linkWithDesc = handleStackOverflowLink(link, (StackOverflowData) urlData);
+            case "GitHubData" -> updatedLink = handleGitHubLink(link, (GitHubData) urlData);
+            case "StackOverflowData" -> updatedLink = handleStackOverflowLink(link, (StackOverflowData) urlData);
         }
-        return linkWithDesc;
+        return updatedLink;
     }
 
-    private Pair<Link, String> handleGitHubLink(Link link, GitHubData gitHubData) {
+    private UpdatedLink handleGitHubLink(Link link, GitHubData gitHubData) {
         GitHubRepositoryResponse response =
                 gitHubClient.fetchRepository(gitHubData.username(), gitHubData.repos()).block();
-        if (response != null && link.getUpdatedAt() != response.updatedAt()) {
+        if (response != null && !link.getUpdatedAt().equals(response.updatedAt())) {
             String description = checkGithubChanges(link, response);
 
             link.setUpdatedAt(response.updatedAt());
             link.setGhForksCount(response.forksCount());
             link.setGhBranchesCount(response.branchesCount());
-            return new ImmutablePair<>(link, description);
+
+            return new UpdatedLink(link, description);
         }
         return null;
     }
 
     private String checkGithubChanges(Link link, GitHubRepositoryResponse response) {
-        //sb используется с расчетом на то, что в дальнейшем будет больше проверок
         StringBuilder description = new StringBuilder();
-        if (link.getGhForksCount() > response.forksCount()) {
-            description.append("Количество форков уменьшилось, ");
-        } else if (link.getGhForksCount() < response.forksCount()) {
-            description.append("Количество форков увеличилось, ");
-        }
+        description.append("Количество форков: ").append(response.forksCount()).append(" ");
+        String forksChanges = link.getGhForksCount() == null ? "" :
+                showChangesBetweenInts(link.getGhForksCount(), response.forksCount());
+        description.append(forksChanges).append("\n");
 
-        if (link.getGhBranchesCount() > response.branchesCount()) {
-            description.append("Количество веток уменьшилось");
-        } else if (link.getGhBranchesCount() < response.branchesCount()) {
-            description.append("Количество веток увеличилось");
-        }
+        description.append("Количество веток: ").append(response.branchesCount()).append(" ");
+        String branchChanges = link.getGhBranchesCount() == null ? "" :
+                showChangesBetweenInts(link.getGhBranchesCount(), response.branchesCount());
+        description.append(branchChanges).append("\n");
+
         return description.toString();
     }
 
-    private Pair<Link, String> handleStackOverflowLink(Link link, StackOverflowData stackOverflowData) {
+    private String showChangesBetweenInts(int a, int b) {
+        if (a < b) {
+            return String.format("(+%s)", b - a);
+        } else if (a > b) {
+            return String.format("(%s)", b - a);
+        }
+        return "";
+    }
+
+    private UpdatedLink handleStackOverflowLink(Link link, StackOverflowData stackOverflowData) {
         StackOverflowQuestionResponse response =
                 stackOverflowClient.fetchQuestion(stackOverflowData.id()).block();
-        if (response != null && link.getUpdatedAt() != response.UpdatedAt()) {
+        if (response != null && !link.getUpdatedAt().equals(response.updatedAt())) {
             String description = checkStackoverflowChanges(link, response);
 
-            link.setUpdatedAt(response.UpdatedAt());
+            link.setUpdatedAt(response.updatedAt());
             link.setSoAnswersCount(response.answerCount());
-            return new ImmutablePair<>(link, description);
+            return new UpdatedLink(link, description);
         }
         return null;
     }
 
     private String checkStackoverflowChanges(Link link, StackOverflowQuestionResponse response) {
-        //sb используется с расчетом на то, что в дальнейшем будет больше проверок
         StringBuilder description = new StringBuilder();
-        if (link.getSoAnswersCount() < response.answerCount()) {
-            description.append("Появились новые ответы");
-        }
+        description.append("Количество ответов: ").append(response.answerCount()).append(" ");
+        String answerChanges = link.getSoAnswersCount() == null ? "" :
+                showChangesBetweenInts(link.getSoAnswersCount(), response.answerCount());
+        description.append(answerChanges).append("\n");
+
         return description.toString();
     }
 
@@ -132,14 +141,13 @@ public class LinkUpdaterImpl implements LinkUpdater {
         return handler.parse(new Request(link));
     }
 
-    private void notifyBot(List<Pair<Link, String>> linksWithDesc) {
-        linksWithDesc.forEach(pair -> {
-            Link link = pair.getKey();
-            String desc = pair.getValue();
+    private void notifyBot(List<UpdatedLink> updatedLinkList) {
+        updatedLinkList.forEach(updatedLink -> {
+            Link link = updatedLink.link();
             LinkUpdateRequest request = new LinkUpdateRequest(
                     link.getId(),
                     URI.create(link.getLink()),
-                    desc,
+                    updatedLink.description(),
                     subscription.findChatsByLinkId(link.getId()).stream()
                             .map(Chat::getId)
                             .toList()

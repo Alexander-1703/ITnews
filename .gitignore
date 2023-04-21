@@ -2,3 +2,4 @@
 **/target/
 **/META-INF/
 bot/src/main/resources/application.yaml
+scrapper/src/main/resources/application.yaml
