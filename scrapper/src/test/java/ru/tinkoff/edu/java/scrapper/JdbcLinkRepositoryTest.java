@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.tinkoff.edu.java.scrapper.environment.JdbcIntegrationEnvironment;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

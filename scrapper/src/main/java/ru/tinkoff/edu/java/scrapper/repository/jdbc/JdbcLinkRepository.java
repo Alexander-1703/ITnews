@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.repository;
+package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -59,10 +59,9 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public List<Link> findNotUpdated(Duration interval) {
-        List<Link> linkList = findAll();
-        linkList.sort(Comparator.comparing(
-                link -> Duration.between(LocalDateTime.now(), link.getUpdatedAt()).compareTo(interval) > 0));
-        return linkList;
+        return findAll().stream()
+                .filter(link -> Duration.between(LocalDateTime.now(), link.getUpdatedAt()).compareTo(interval) > 0)
+                .toList();
     }
 
     @Override

@@ -16,20 +16,23 @@ import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientImpl;
 @Configuration
 public class ClientConfiguration {
     private final String githubUrl;
+    private final String githubAccessToken;
     private final String stackoverflowUrl;
     private final String botUrl;
 
     public ClientConfiguration(@Value("${client.github-api:https://api.github.com}") String githubUrl,
+                               @Value("${github.token}") String githubAccessToken,
                                @Value("${client.stackoverflow-api:https://api.stackexchange.com/2.3}") String stackoverflowUrl,
                                @Value("${client.bot-url:http://localhost:8081}") String botUrl) {
         this.githubUrl = githubUrl;
+        this.githubAccessToken = githubAccessToken;
         this.stackoverflowUrl = stackoverflowUrl;
         this.botUrl = botUrl;
     }
 
     @Bean
     public GitHubClient githubWebClient() {
-        return new GitHubClientImpl(githubUrl);
+        return new GitHubClientImpl(githubUrl, githubAccessToken);
     }
 
     @Bean
