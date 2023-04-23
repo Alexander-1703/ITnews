@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.service.updater;
+package ru.tinkoff.edu.java.scrapper.service.jooq;
 
 import java.net.URI;
 import java.time.Duration;
@@ -25,16 +25,16 @@ import ru.tinkoff.edu.java.scrapper.dto.response.GitHubRepositoryResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowQuestionResponse;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
-import ru.tinkoff.edu.java.scrapper.service.interfaces.LinkUpdater;
+import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
+import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class LinkUpdaterImpl implements LinkUpdater {
-    private final LinkRepository linkRepository;
-    private final LinkChatRepository subscription;
+public class JooqLinkUpdater implements LinkUpdater {
+    private final JooqLinkRepository linkRepository;
+    private final JooqLinkChatRepository subscription;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
     private final BotClient botClient;
@@ -89,23 +89,18 @@ public class LinkUpdaterImpl implements LinkUpdater {
         return null;
     }
 
-    private void appendCountAndChanges(StringBuilder description, String title, int count, String changes) {
-        description
-                .append(title).append(": ")
-                .append(count).append(" ")
-                .append(changes).append("\n");
-    }
-
     private String checkGithubChanges(Link link, GitHubRepositoryResponse response) {
         StringBuilder description = new StringBuilder();
-
+        description.append("Количество форков: ").append(response.forksCount()).append(" ");
         String forksChanges = link.getGhForksCount() == null ? "" :
                 showChangesBetweenInts(link.getGhForksCount(), response.forksCount());
+        description.append(forksChanges).append("\n");
+
+        description.append("Количество веток: ").append(response.branchesCount()).append(" ");
         String branchChanges = link.getGhBranchesCount() == null ? "" :
                 showChangesBetweenInts(link.getGhBranchesCount(), response.branchesCount());
+        description.append(branchChanges).append("\n");
 
-        appendCountAndChanges(description, "Количество форков", response.forksCount(), forksChanges);
-        appendCountAndChanges(description, "Количество веток", response.branchesCount(), branchChanges);
         return description.toString();
     }
 
@@ -133,11 +128,11 @@ public class LinkUpdaterImpl implements LinkUpdater {
 
     private String checkStackoverflowChanges(Link link, StackOverflowQuestionResponse response) {
         StringBuilder description = new StringBuilder();
-
+        description.append("Количество ответов: ").append(response.answerCount()).append(" ");
         String answerChanges = link.getSoAnswersCount() == null ? "" :
                 showChangesBetweenInts(link.getSoAnswersCount(), response.answerCount());
+        description.append(answerChanges).append("\n");
 
-        appendCountAndChanges(description, "Количество ответов", response.answerCount(), answerChanges);
         return description.toString();
     }
 

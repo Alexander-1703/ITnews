@@ -7,7 +7,7 @@ import org.jooq.DSLContext;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.ChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.ChatRepository;
 
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Chat.CHAT;
 

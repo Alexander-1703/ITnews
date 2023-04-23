@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.LinkChatRepository;
 
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Chat.CHAT;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Link.LINK;

@@ -3,14 +3,16 @@ package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 import java.sql.ResultSet;
 import java.util.List;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.LinkChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.mapper.ChatRowMapper;
+import ru.tinkoff.edu.java.scrapper.repository.mapper.LinkRowMapper;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,6 +30,8 @@ public class JdbcLinkChatRepository implements LinkChatRepository {
                     "WHERE link_chat.chatId = ?";
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Link> linkRowMapper = new LinkRowMapper();
+    private final RowMapper<Chat> chatRowMapper = new ChatRowMapper();
 
     @Override
     public boolean addLinkToChat(long linkId, long chatId) {
@@ -54,12 +58,12 @@ public class JdbcLinkChatRepository implements LinkChatRepository {
     @Override
     public List<Chat> findChatsByLinkId(long linkId) {
         return jdbcTemplate.query(FIND_CHATS_BY_LINK_ID, ps -> ps.setLong(1, linkId),
-                BeanPropertyRowMapper.newInstance(Chat.class));
+                chatRowMapper);
     }
 
     @Override
     public List<Link> findLinksByChatId(long chatId) {
         return jdbcTemplate.query(FIND_LINKS_BY_CHAT_ID, ps -> ps.setLong(1, chatId),
-                BeanPropertyRowMapper.newInstance(Link.class));
+                linkRowMapper);
     }
 }

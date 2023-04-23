@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import ru.tinkoff.edu.java.scrapper.service.interfaces.TgChatService;
+import ru.tinkoff.edu.java.scrapper.service.TgChatService;
 
 @RestController
 @Validated

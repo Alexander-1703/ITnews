@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.service.interfaces;
+package ru.tinkoff.edu.java.scrapper.service;
 
 import java.net.URI;
 import java.util.Collection;

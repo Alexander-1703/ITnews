@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.service.interfaces;
+package ru.tinkoff.edu.java.scrapper.service;
 
 import ru.tinkoff.edu.java.scrapper.dto.UpdatedLink;
 import ru.tinkoff.edu.java.scrapper.model.Link;

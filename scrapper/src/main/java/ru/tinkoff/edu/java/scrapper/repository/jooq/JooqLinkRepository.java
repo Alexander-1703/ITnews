@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.LinkRepository;
 
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Link.LINK;
 
