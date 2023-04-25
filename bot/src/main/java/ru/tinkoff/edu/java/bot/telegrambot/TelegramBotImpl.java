@@ -75,11 +75,6 @@ public class TelegramBotImpl implements TgBot {
         return processedUpdates;
     }
 
-    @Override
-    public void close() {
-
-    }
-
     public void sendUpdate(LinkUpdateRequest update) {
         String message = "Появилось обновление в " + update.uri().toString() + ":\n" +
                 update.description();

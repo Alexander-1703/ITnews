@@ -18,6 +18,6 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public boolean deleteChat(long chatId) {
-        return deleteChat(chatId);
+        return scrapperClient.deleteChat(chatId);
     }
 }

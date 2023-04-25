@@ -44,10 +44,11 @@ public class JdbcLinkChatRepository implements LinkChatRepository {
 
     @Override
     public boolean isSubscribed(long linkId, long chatId) {
-        return Boolean.TRUE.equals(jdbcTemplate.query(FIND_SUBSCRIPTION, ps -> {
+        Boolean isSubscribed = jdbcTemplate.query(FIND_SUBSCRIPTION, ps -> {
             ps.setLong(1, linkId);
             ps.setLong(2, chatId);
-        }, ResultSet::next));
+        }, ResultSet::next);
+        return isSubscribed != null && isSubscribed;
     }
 
     @Override
