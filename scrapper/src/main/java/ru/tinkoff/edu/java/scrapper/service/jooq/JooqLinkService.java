@@ -3,7 +3,6 @@ package ru.tinkoff.edu.java.scrapper.service.jooq;
 import java.net.URI;
 import java.util.Collection;
 
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
 public class JooqLinkService implements LinkService {

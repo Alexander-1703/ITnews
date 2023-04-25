@@ -7,10 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.linkparser.HandlerBuilder;
 import ru.tinkoff.edu.java.linkparser.Request.Request;
 import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
@@ -29,12 +27,11 @@ import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
 
-@Service
-@Slf4j
 @RequiredArgsConstructor
 public class JpaLinkUpdater implements LinkUpdater {
     private final JpaLinkRepository linkRepository;
-    private final JpaLinkService linkService;
+    private final JpaSubscriptionService subscriptionService;
+
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
     private final BotClient botClient;
@@ -78,7 +75,7 @@ public class JpaLinkUpdater implements LinkUpdater {
     private UpdatedLink handleGitHubLink(Link link, GitHubData gitHubData) {
         GitHubRepositoryResponse response =
                 gitHubClient.fetchRepository(gitHubData.username(), gitHubData.repos()).block();
-        if (response != null && !link.getUpdatedAt().equals(response.updatedAt())) {
+        if (response != null && !link.getUpdatedAt().toInstant().equals(response.updatedAt().toInstant())) {
             String description = checkGithubChanges(link, response);
 
             link.setUpdatedAt(response.updatedAt());
@@ -154,7 +151,7 @@ public class JpaLinkUpdater implements LinkUpdater {
                     link.getId(),
                     URI.create(link.getLink()),
                     updatedLink.description(),
-                    linkService.findChatsByLinkId(link.getId()).stream()
+                    subscriptionService.findChatsByLinkId(link.getId()).stream()
                             .map(Chat::getId)
                             .toList()
             );

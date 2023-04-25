@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.java.scrapper.service.jooq;
 
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqChatRepository;
 import ru.tinkoff.edu.java.scrapper.service.TgChatService;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
 public class JooqTgChatService implements TgChatService {

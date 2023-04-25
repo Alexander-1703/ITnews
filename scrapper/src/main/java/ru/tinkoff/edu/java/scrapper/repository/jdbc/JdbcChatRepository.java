@@ -4,14 +4,12 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.repository.ChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.mapper.ChatRowMapper;
 
-@Repository
 @RequiredArgsConstructor
 public class JdbcChatRepository implements ChatRepository {
     private static final String FIND_CHAT_BY_ID = "SELECT * FROM chat WHERE id = ?";

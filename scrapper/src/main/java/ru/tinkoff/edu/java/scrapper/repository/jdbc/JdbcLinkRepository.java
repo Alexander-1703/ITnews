@@ -1,19 +1,17 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.LinkRepository;
 import ru.tinkoff.edu.java.scrapper.repository.mapper.LinkRowMapper;
 
-@Repository
 @RequiredArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
     private static final String ADD_LINK = "INSERT INTO link(link) VALUES (?)";
@@ -59,7 +57,7 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public List<Link> findNotUpdated(Duration interval) {
         return findAll().stream()
-                .filter(link -> Duration.between(LocalDateTime.now(), link.getUpdatedAt()).compareTo(interval) > 0)
+                .filter(link -> Duration.between(link.getUpdatedAt(), OffsetDateTime.now()).compareTo(interval) > 0)
                 .toList();
     }
 

@@ -3,7 +3,6 @@ package ru.tinkoff.edu.java.scrapper.repository.jooq;
 import java.util.List;
 
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
@@ -14,7 +13,6 @@ import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Chat.CHAT;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Link.LINK;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.LinkChat.LINK_CHAT;
 
-@Repository
 @RequiredArgsConstructor
 public class JooqLinkChatRepository implements LinkChatRepository {
     private final DSLContext context;
@@ -39,7 +37,8 @@ public class JooqLinkChatRepository implements LinkChatRepository {
 
     @Override
     public boolean isSubscribed(long linkId, long chatId) {
-        return context.select(LINK_CHAT)
+        return context.select(LINK_CHAT.fields())
+                .from(LINK_CHAT)
                 .where(LINK_CHAT.LINKID.eq(linkId), LINK_CHAT.CHATID.eq(chatId))
                 .fetchOne() != null;
     }

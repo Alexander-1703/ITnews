@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
@@ -14,18 +13,20 @@ import ru.tinkoff.edu.java.scrapper.repository.LinkChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.mapper.ChatRowMapper;
 import ru.tinkoff.edu.java.scrapper.repository.mapper.LinkRowMapper;
 
-@Repository
 @RequiredArgsConstructor
 public class JdbcLinkChatRepository implements LinkChatRepository {
-    private static final String FIND_SUBSCRIPTION = "SELECT * FROM link_chat WHERE linkId = ? AND chatId = ?";
     private static final String ADD_LINK_TO_CHAT = "INSERT INTO link_chat VALUES (?, ?)";
     private static final String REMOVE_LINK_FROM_CHAT = "DELETE  FROM link_chat WHERE chatid = ? AND linkid = ?";
+    private static final String FIND_SUBSCRIPTION =
+            "SELECT link_chat.linkid, link_chat.chatid" +
+                    " FROM link_chat" +
+                    " WHERE linkId = ? AND chatId = ?";
     private static final String FIND_CHATS_BY_LINK_ID =
-            "SELECT chat.id FROM chat " +
+            "SELECT * FROM chat " +
                     "JOIN link_chat ON chat.id = link_chat.chatId " +
                     "WHERE link_chat.linkId = ?";
     private static final String FIND_LINKS_BY_CHAT_ID =
-            "SELECT link.id, link.link, link.updatedAt FROM link " +
+            "SELECT * FROM link " +
                     "JOIN link_chat ON link.id = link_chat.linkId " +
                     "WHERE link_chat.chatId = ?";
 

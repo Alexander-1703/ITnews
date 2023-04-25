@@ -3,8 +3,11 @@ package ru.tinkoff.edu.java.scrapper.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,8 +23,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Chat {
     @Id
+    @Column(name = "id")
     private Long id;
 
     @ManyToMany
+    @JoinTable(name = "link_chat",
+            joinColumns = @JoinColumn(name = "chatid"),
+            inverseJoinColumns = @JoinColumn(name = "linkid"))
     private Set<Link> links = new HashSet<>();
 }

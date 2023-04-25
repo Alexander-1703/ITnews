@@ -3,7 +3,6 @@ package ru.tinkoff.edu.java.scrapper.service.jdbc;
 import java.net.URI;
 import java.util.Collection;
 
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
 public class JdbcLinkService implements LinkService {
