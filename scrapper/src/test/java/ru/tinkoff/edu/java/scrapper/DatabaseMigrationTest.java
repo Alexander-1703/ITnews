@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import org.junit.Test;
 
-import ru.tinkoff.edu.java.scrapper.enviroment.IntegrationEnvironment;
+import ru.tinkoff.edu.java.scrapper.environment.IntegrationEnvironment;
 
 import static junit.framework.TestCase.assertTrue;
 

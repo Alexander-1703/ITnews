@@ -9,8 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Validated
 @ConfigurationProperties(prefix = "bot", ignoreUnknownFields = false)
-public record ApplicationConfig(@NotNull String test,
-                                @NotNull String name,
+public record ApplicationConfig(@NotNull String name,
                                 @NotNull String token,
                                 @NotNull Updates updates)
 {

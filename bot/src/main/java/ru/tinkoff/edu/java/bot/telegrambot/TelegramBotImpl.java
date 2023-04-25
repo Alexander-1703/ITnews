@@ -18,6 +18,7 @@ import com.pengrad.telegrambot.response.BaseResponse;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import ru.tinkoff.edu.java.bot.dto.request.LinkUpdateRequest;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.Command;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor.UserMessageProcessor;
 
@@ -74,8 +75,12 @@ public class TelegramBotImpl implements TgBot {
         return processedUpdates;
     }
 
-    @Override
-    public void close() {
-        //TODO: закрытие соединения с бд
+    public void sendUpdate(LinkUpdateRequest update) {
+        String message = "Появилось обновление в " + update.uri().toString() + ":\n" +
+                update.description();
+        update.tgChatIds().forEach(chatId -> {
+            SendMessage sendMessage = new SendMessage(chatId, message).disableWebPagePreview(true);
+            execute(sendMessage);
+        });
     }
 }

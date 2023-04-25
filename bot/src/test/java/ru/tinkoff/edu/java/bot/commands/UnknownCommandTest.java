@@ -11,13 +11,15 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 
-import ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor.DefaultUserMessageProcessor;
-import ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor.UserMessageProcessor;
+import ru.tinkoff.edu.java.bot.service.interfaces.ChatService;
+import ru.tinkoff.edu.java.bot.service.interfaces.LinkService;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.HelpCommand;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.ListCommand;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.StartCommand;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.TrackCommand;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.UntrackCommand;
+import ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor.DefaultUserMessageProcessor;
+import ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor.UserMessageProcessor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -29,11 +31,13 @@ public class UnknownCommandTest {
 
     @BeforeEach
     public void setup() {
+        LinkService linkService = Mockito.mock(LinkService.class);
+        ChatService chatService = Mockito.mock(ChatService.class);
         userMessageProcessor = new DefaultUserMessageProcessor(List.of(
                 new HelpCommand(),
-                new StartCommand(),
-                new TrackCommand(),
-                new UntrackCommand(),
+                new StartCommand(chatService),
+                new TrackCommand(linkService),
+                new UntrackCommand(linkService),
                 new ListCommand()
         ));
     }
