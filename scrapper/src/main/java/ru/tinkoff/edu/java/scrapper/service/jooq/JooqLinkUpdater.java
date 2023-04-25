@@ -89,18 +89,23 @@ public class JooqLinkUpdater implements LinkUpdater {
         return null;
     }
 
+    private void appendCountAndChanges(StringBuilder description, String title, int count, String changes) {
+        description
+                .append(title).append(": ")
+                .append(count).append(" ")
+                .append(changes).append("\n");
+    }
+
     private String checkGithubChanges(Link link, GitHubRepositoryResponse response) {
         StringBuilder description = new StringBuilder();
-        description.append("Количество форков: ").append(response.forksCount()).append(" ");
+
         String forksChanges = link.getGhForksCount() == null ? "" :
                 showChangesBetweenInts(link.getGhForksCount(), response.forksCount());
-        description.append(forksChanges).append("\n");
-
-        description.append("Количество веток: ").append(response.branchesCount()).append(" ");
         String branchChanges = link.getGhBranchesCount() == null ? "" :
                 showChangesBetweenInts(link.getGhBranchesCount(), response.branchesCount());
-        description.append(branchChanges).append("\n");
 
+        appendCountAndChanges(description, "Количество форков", response.forksCount(), forksChanges);
+        appendCountAndChanges(description, "Количество веток", response.branchesCount(), branchChanges);
         return description.toString();
     }
 
@@ -128,11 +133,11 @@ public class JooqLinkUpdater implements LinkUpdater {
 
     private String checkStackoverflowChanges(Link link, StackOverflowQuestionResponse response) {
         StringBuilder description = new StringBuilder();
-        description.append("Количество ответов: ").append(response.answerCount()).append(" ");
+
         String answerChanges = link.getSoAnswersCount() == null ? "" :
                 showChangesBetweenInts(link.getSoAnswersCount(), response.answerCount());
-        description.append(answerChanges).append("\n");
 
+        appendCountAndChanges(description, "Количество ответов", response.answerCount(), answerChanges);
         return description.toString();
     }
 
