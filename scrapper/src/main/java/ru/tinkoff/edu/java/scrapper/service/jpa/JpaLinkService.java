@@ -46,6 +46,9 @@ public class JpaLinkService implements LinkService {
     @Transactional
     public Link remove(long tgChatId, URI url) {
         Link link = linkRepository.findByLink(url.toString());
+        if (link == null) {
+            return null;
+        }
         subscriptionService.removeLinkFromChat(link.getId(), tgChatId);
         log.info("unbind link " + link.getLink() + " from " + tgChatId);
         if (subscriptionService.findChatsByLinkId(link.getId()).isEmpty()) {

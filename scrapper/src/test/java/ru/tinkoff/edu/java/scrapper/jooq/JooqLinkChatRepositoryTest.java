@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper;
+package ru.tinkoff.edu.java.scrapper.jooq;
 
 import java.util.List;
 
@@ -11,26 +11,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
+public class JooqLinkChatRepositoryTest extends JooqChatRepositoryTest {
     private static final long NOT_EXISTING_ID = -1L;
     private static final int EXPECTED_FILLED_TABLE_SIZE = 3;
     private static final int EXPECTED_EMPTY_TABLE_SIZE = 0;
 
     @Autowired
-    private JdbcLinkChatRepository linkChatRepository;
+    private JooqLinkChatRepository linkChatRepository;
     @Autowired
-    private JdbcLinkRepository linkRepository;
+    private JooqLinkRepository linkRepository;
     @Autowired
-    private JdbcChatRepository chatRepository;
+    private JooqChatRepository chatRepository;
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_test_link.sql"})
     @Test

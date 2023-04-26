@@ -1,8 +1,7 @@
-package ru.tinkoff.edu.java.scrapper;
+package ru.tinkoff.edu.java.scrapper.jdbc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +12,6 @@ import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcChatRepository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JdbcChatRepositoryTest extends JdbcIntegrationEnvironment {
@@ -36,8 +34,8 @@ public class JdbcChatRepositoryTest extends JdbcIntegrationEnvironment {
     @Test
     @Transactional
     @Rollback
-    void addChat_existInDB_throwsException() {
-        assertThrows(DuplicateKeyException.class, () -> chatRepository.add(EXISTING_CHAT_ID));
+    void addChat_existInDB_returnThisChat() {
+        assertEquals(EXISTING_CHAT_ID, chatRepository.add(EXISTING_CHAT_ID).getId());
     }
 
     @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
