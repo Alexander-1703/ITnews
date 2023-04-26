@@ -3,16 +3,19 @@ package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 import java.sql.ResultSet;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.LinkChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.mapper.ChatRowMapper;
 import ru.tinkoff.edu.java.scrapper.repository.mapper.LinkRowMapper;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JdbcLinkChatRepository implements LinkChatRepository {
     private static final String ADD_LINK_TO_CHAT = "INSERT INTO link_chat VALUES (?, ?)";
@@ -36,8 +39,14 @@ public class JdbcLinkChatRepository implements LinkChatRepository {
 
     @Override
     public boolean addLinkToChat(long linkId, long chatId) {
-        if (!isSubscribed(linkId, chatId)) {
-            return jdbcTemplate.update(ADD_LINK_TO_CHAT, linkId, chatId) > 0;
+        try {
+            if (!isSubscribed(linkId, chatId)) {
+                return jdbcTemplate.update(ADD_LINK_TO_CHAT, linkId, chatId) > 0;
+            }
+        } catch (DataIntegrityViolationException e) {
+            log.error("Link binding error with chat id");
+            e.printStackTrace();
+            return false;
         }
         return false;
     }

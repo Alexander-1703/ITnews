@@ -1,12 +1,20 @@
 INSERT INTO chat
 VALUES (0);
 
-INSERT INTO link(link)
-VALUES ('github.com'),
-       ('tinkoff.ru'),
-       ('google.com');
+WITH inserted_links AS (
+    INSERT INTO link (link)
+        VALUES ('github.com'),
+               ('tinkoff.ru'),
+               ('google.com')
+        RETURNING id
+),
 
-INSERT INTO link_chat
-VALUES ('github.com', 0),
-       ('tinkoff.ru', 0),
-       ('google.com', 0);
+     link_chat_mapping AS (
+         SELECT id AS link_id, 0 AS chat_id
+         FROM inserted_links
+     )
+
+INSERT
+INTO link_chat (linkId, chatId)
+SELECT link_id, chat_id
+FROM link_chat_mapping;
