@@ -3,6 +3,7 @@ package ru.tinkoff.edu.java.scrapper.repository.jooq;
 import java.util.List;
 
 import org.jooq.DSLContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
@@ -18,6 +19,7 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     private final DSLContext context;
 
     @Override
+    @Transactional
     public boolean addLinkToChat(long linkId, long chatId) {
         if (!isSubscribed(linkId, chatId)) {
             return context.insertInto(LINK_CHAT)
@@ -29,6 +31,7 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     }
 
     @Override
+    @Transactional
     public boolean removeLinkFromChat(long linkId, long chatId) {
         return context.deleteFrom(LINK_CHAT)
                 .where(LINK_CHAT.CHATID.eq(chatId), LINK_CHAT.LINKID.eq(linkId))

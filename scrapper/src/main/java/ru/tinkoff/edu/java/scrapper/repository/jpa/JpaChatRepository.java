@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import ru.tinkoff.edu.java.scrapper.model.Chat;
-import ru.tinkoff.edu.java.scrapper.model.Link;
 
 @Repository
 @ConditionalOnProperty(prefix = "scrapper", name = "accessType", havingValue = "jpa")

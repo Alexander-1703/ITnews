@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
@@ -21,6 +22,7 @@ public class JdbcChatRepository implements ChatRepository {
     private final RowMapper<Chat> chatRowMapper = new ChatRowMapper();
 
     @Override
+    @Transactional
     public Chat add(long chatId) {
         Chat chat = findById(chatId);
         if (chat != null) {
@@ -31,6 +33,7 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
+    @Transactional
     public boolean remove(long id) {
         return jdbcTemplate.update(DELETE_CHAT_BY_ID, id) > 0;
     }

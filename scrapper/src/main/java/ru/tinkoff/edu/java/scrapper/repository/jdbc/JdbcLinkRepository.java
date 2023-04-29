@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Link;
@@ -26,6 +27,7 @@ public class JdbcLinkRepository implements LinkRepository {
     private final RowMapper<Link> linkRowMapper = new LinkRowMapper();
 
     @Override
+    @Transactional
     public Link save(Link link) {
         if (link.getId() == null) {
             jdbcTemplate.update(ADD_LINK, link.getLink());
@@ -38,6 +40,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public boolean remove(long id) {
         return jdbcTemplate.update(DELETE_LINK_BY_ID, id) > 0;
     }

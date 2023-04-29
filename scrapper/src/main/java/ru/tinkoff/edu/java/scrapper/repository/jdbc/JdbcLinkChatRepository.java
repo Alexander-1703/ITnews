@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
@@ -35,6 +36,7 @@ public class JdbcLinkChatRepository implements LinkChatRepository {
     private final RowMapper<Chat> chatRowMapper = new ChatRowMapper();
 
     @Override
+    @Transactional
     public boolean addLinkToChat(long linkId, long chatId) {
         if (!isSubscribed(linkId, chatId)) {
             return jdbcTemplate.update(ADD_LINK_TO_CHAT, linkId, chatId) > 0;
@@ -43,6 +45,7 @@ public class JdbcLinkChatRepository implements LinkChatRepository {
     }
 
     @Override
+    @Transactional
     public boolean removeLinkFromChat(long linkId, long chatId) {
         return jdbcTemplate.update(REMOVE_LINK_FROM_CHAT, chatId, linkId) > 0;
     }

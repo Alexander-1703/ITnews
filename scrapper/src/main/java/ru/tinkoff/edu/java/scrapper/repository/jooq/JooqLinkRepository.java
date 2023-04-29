@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.jooq.DSLContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Link;
@@ -18,6 +19,7 @@ public class JooqLinkRepository implements LinkRepository {
 
 
     @Override
+    @Transactional
     public Link save(Link link) {
         if (link.getId() == null) {
             return context.insertInto(LINK)
@@ -36,6 +38,7 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public boolean remove(long id) {
         return context.deleteFrom(LINK)
                 .where(LINK.ID.eq(id))

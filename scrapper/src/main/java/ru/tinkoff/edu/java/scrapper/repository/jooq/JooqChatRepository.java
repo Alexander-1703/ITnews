@@ -3,6 +3,7 @@ package ru.tinkoff.edu.java.scrapper.repository.jooq;
 import java.util.List;
 
 import org.jooq.DSLContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
@@ -15,6 +16,7 @@ public class JooqChatRepository implements ChatRepository {
     private final DSLContext context;
 
     @Override
+    @Transactional
     public Chat add(long chatId) {
         return context.insertInto(CHAT)
                 .set(CHAT.ID, chatId)
@@ -26,6 +28,7 @@ public class JooqChatRepository implements ChatRepository {
     }
 
     @Override
+    @Transactional
     public boolean remove(long id) {
         return context.deleteFrom(CHAT)
                 .where(CHAT.ID.eq(id))
