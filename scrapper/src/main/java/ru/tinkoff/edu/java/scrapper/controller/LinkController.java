@@ -18,7 +18,7 @@ import ru.tinkoff.edu.java.scrapper.dto.request.LinkRequest;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinkResponse;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.service.interfaces.LinkService;
+import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 @RestController
 @Validated

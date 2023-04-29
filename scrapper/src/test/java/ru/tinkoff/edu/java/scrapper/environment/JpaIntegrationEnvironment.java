@@ -7,9 +7,9 @@ import org.springframework.test.context.DynamicPropertySource;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 
 @SpringBootTest(classes = IntegrationEnvironment.TestDataSourceConfiguration.class)
-public class JdbcIntegrationEnvironment {
+public class JpaIntegrationEnvironment {
     @DynamicPropertySource
-    static void jdbcProperties(DynamicPropertyRegistry registry) {
-        registry.add("scrapper.accessType", () -> ApplicationConfig.AccessType.JDBC);
+    static void jpaProperties(DynamicPropertyRegistry registry) {
+        registry.add("scrapper.accessType", () -> ApplicationConfig.AccessType.JPA);
     }
 }

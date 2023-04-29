@@ -1,33 +1,37 @@
 package ru.tinkoff.edu.java.scrapper.repository.jooq;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.LinkRepository;
 
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Link.LINK;
 
-@Repository
 @RequiredArgsConstructor
 public class JooqLinkRepository implements LinkRepository {
     private final DSLContext context;
 
 
     @Override
+    @Transactional
     public Link save(Link link) {
         if (link.getId() == null) {
+            Link alreadySaved = findByLink(link.getLink());
+            if (alreadySaved != null) {
+                return alreadySaved;
+            }
             return context.insertInto(LINK)
                     .set(LINK.LINK_, link.getLink())
                     .returning(LINK.fields())
                     .fetchOneInto(Link.class);
         }
-        return context.insertInto(LINK)
+        return context.update(LINK)
                 .set(LINK.LINK_, link.getLink())
                 .set(LINK.UPDATEDAT, link.getUpdatedAt())
                 .set(LINK.GHFORKS, link.getGhForksCount())
@@ -38,6 +42,7 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public boolean remove(long id) {
         return context.deleteFrom(LINK)
                 .where(LINK.ID.eq(id))
@@ -66,7 +71,7 @@ public class JooqLinkRepository implements LinkRepository {
                 .from(LINK)
                 .fetchInto(Link.class)
                 .stream()
-                .filter(link -> Duration.between(LocalDateTime.now(), link.getUpdatedAt()).compareTo(interval) > 0)
+                .filter(link -> Duration.between(link.getUpdatedAt(), OffsetDateTime.now()).compareTo(interval) > 0)
                 .toList();
     }
 

@@ -1,38 +1,37 @@
-package ru.tinkoff.edu.java.scrapper;
+package ru.tinkoff.edu.java.scrapper.jooq;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.tinkoff.edu.java.scrapper.environment.JdbcIntegrationEnvironment;
+import ru.tinkoff.edu.java.scrapper.environment.JooqIntegrationEnvironment;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JdbcLinkRepositoryTest extends JdbcIntegrationEnvironment {
+public class JooqLinkRepositoryTest extends JooqIntegrationEnvironment {
     private static final long NOT_EXISTING_LINK_ID = -1L;
     private static final int EXPECTED_FILLED_LINK_SIZE = 3;
     private static final int EXPECTED_EMPTY_LINK_SIZE = 0;
+    private static final String TEST_LINK = "http://test-link.ru";
 
     @Autowired
-    private JdbcLinkRepository linkRepository;
+    private JooqLinkRepository linkRepository;
 
     @Test
     @Transactional
     @Rollback
     void addLink_notInDB_save() {
         Link link = new Link();
-        link.setLink("http://test-link.ru");
+        link.setLink(TEST_LINK);
         assertNotNull(linkRepository.save(link));
     }
 
@@ -40,10 +39,10 @@ public class JdbcLinkRepositoryTest extends JdbcIntegrationEnvironment {
     @Test
     @Transactional
     @Rollback
-    void addLink_existInDB_throwsException() {
+    void addLink_existInDB_returnThisLink() {
         Link link = new Link();
-        link.setLink("http://test-link.ru");
-        assertThrows(DuplicateKeyException.class, () -> linkRepository.save(link));
+        link.setLink(TEST_LINK);
+        assertEquals(TEST_LINK, linkRepository.save(link).getLink());
     }
 
     @Sql(scripts = "/sql/link/add_test_link.sql")

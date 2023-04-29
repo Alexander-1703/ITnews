@@ -1,10 +1,9 @@
-package ru.tinkoff.edu.java.scrapper;
+package ru.tinkoff.edu.java.scrapper.jdbc;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,6 @@ import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
@@ -46,10 +44,9 @@ public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
     @Test
     @Transactional
     @Rollback
-    public void addLinkToChat_chatNotExist_throwsException() {
+    public void addLinkToChat_chatNotExist_returnFalse() {
         long linkId = linkRepository.findAll().get(0).getId();
-        assertThrows(DataIntegrityViolationException.class,
-                () -> linkChatRepository.addLinkToChat(linkId, NOT_EXISTING_ID));
+        assertFalse(linkChatRepository.addLinkToChat(linkId, NOT_EXISTING_ID));
     }
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_test_link.sql"})
@@ -76,10 +73,9 @@ public class JdbcLinkChatRepositoryTest extends JdbcChatRepositoryTest {
     @Test
     @Transactional
     @Rollback
-    public void addLinkToChat_linkNotExist_throwsException() {
+    public void addLinkToChat_linkNotExist_returnFalse() {
         long chatId = chatRepository.findAll().get(0).getId();
-        assertThrows(DataIntegrityViolationException.class,
-                () -> linkChatRepository.addLinkToChat(NOT_EXISTING_ID, chatId));
+        assertFalse(linkChatRepository.addLinkToChat(NOT_EXISTING_ID, chatId));
     }
 
     @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")

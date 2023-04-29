@@ -1,16 +1,16 @@
-package ru.tinkoff.edu.java.scrapper.service.jdbc;
+package ru.tinkoff.edu.java.scrapper.service.jooq;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqChatRepository;
 import ru.tinkoff.edu.java.scrapper.service.TgChatService;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JdbcTgChatService implements TgChatService {
-    private final JdbcChatRepository chatRepository;
+public class JooqTgChatService implements TgChatService {
+    private final JooqChatRepository chatRepository;
 
     @Override
     @Transactional

@@ -1,8 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
 import java.time.Duration;
-import jakarta.validation.constraints.NotNull;
-
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -16,7 +14,14 @@ import jakarta.validation.constraints.NotNull;
 @EnableScheduling
 @ConfigurationProperties(prefix = "scrapper", ignoreUnknownFields = false)
 public record ApplicationConfig(@NotNull Scheduler scheduler,
-                                @JsonProperty("update-link-interval") @NotNull Duration updateLinkInterval) {
+                                @JsonProperty("update-link-interval") @NotNull Duration updateLinkInterval,
+                                @NotNull AccessType accessType) {
     public record Scheduler(Duration interval) {
+    }
+
+    public enum AccessType {
+        JDBC,
+        JPA,
+        JOOQ;
     }
 }

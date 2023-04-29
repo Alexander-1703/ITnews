@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.service.updater;
+package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import java.net.URI;
 import java.time.Duration;
@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.linkparser.HandlerBuilder;
 import ru.tinkoff.edu.java.linkparser.Request.Request;
 import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
@@ -25,16 +23,14 @@ import ru.tinkoff.edu.java.scrapper.dto.response.GitHubRepositoryResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackOverflowQuestionResponse;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
-import ru.tinkoff.edu.java.scrapper.service.interfaces.LinkUpdater;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
 
-@Service
-@Slf4j
 @RequiredArgsConstructor
-public class LinkUpdaterImpl implements LinkUpdater {
-    private final LinkRepository linkRepository;
-    private final LinkChatRepository subscription;
+public class JdbcLinkUpdater implements LinkUpdater {
+    private final JdbcLinkRepository linkRepository;
+    private final JdbcLinkChatRepository subscription;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
     private final BotClient botClient;
@@ -77,6 +73,7 @@ public class LinkUpdaterImpl implements LinkUpdater {
     private UpdatedLink handleGitHubLink(Link link, GitHubData gitHubData) {
         GitHubRepositoryResponse response =
                 gitHubClient.fetchRepository(gitHubData.username(), gitHubData.repos()).block();
+
         if (response != null && !link.getUpdatedAt().equals(response.updatedAt())) {
             String description = checkGithubChanges(link, response);
 

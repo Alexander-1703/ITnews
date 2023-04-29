@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.repository.interfaces;
+package ru.tinkoff.edu.java.scrapper.repository;
 
 import java.util.List;
 

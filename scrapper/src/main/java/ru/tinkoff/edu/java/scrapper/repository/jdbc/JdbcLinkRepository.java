@@ -1,21 +1,18 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.Comparator;
 import java.util.List;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.LinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.mapper.LinkRowMapper;
 
-@Repository
 @RequiredArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
     private static final String ADD_LINK = "INSERT INTO link(link) VALUES (?)";
@@ -27,10 +24,16 @@ public class JdbcLinkRepository implements LinkRepository {
             "UPDATE link SET link = ?, updatedat = ?, ghforks = ?, ghbranches = ?, soanswers = ? WHERE id = ?";
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Link> linkRowMapper = new LinkRowMapper();
 
     @Override
+    @Transactional
     public Link save(Link link) {
         if (link.getId() == null) {
+            Link alreadySaved = findByLink(link.getLink());
+            if (alreadySaved != null) {
+                return alreadySaved;
+            }
             jdbcTemplate.update(ADD_LINK, link.getLink());
             return findByLink(link.getLink());
         }
@@ -41,6 +44,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public boolean remove(long id) {
         return jdbcTemplate.update(DELETE_LINK_BY_ID, id) > 0;
     }
@@ -48,24 +52,24 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public Link findById(long linkId) {
         return jdbcTemplate.queryForStream(FIND_LINK_BY_ID, ps -> ps.setLong(1, linkId),
-                BeanPropertyRowMapper.newInstance(Link.class)).findFirst().orElse(null);
+                linkRowMapper).findFirst().orElse(null);
     }
 
     @Override
     public Link findByLink(String link) {
         return jdbcTemplate.queryForStream(FIND_LINK_BY_LINK, ps -> ps.setString(1, link),
-                BeanPropertyRowMapper.newInstance(Link.class)).findFirst().orElse(null);
+                linkRowMapper).findFirst().orElse(null);
     }
 
     @Override
     public List<Link> findNotUpdated(Duration interval) {
         return findAll().stream()
-                .filter(link -> Duration.between(LocalDateTime.now(), link.getUpdatedAt()).compareTo(interval) > 0)
+                .filter(link -> Duration.between(link.getUpdatedAt(), OffsetDateTime.now()).compareTo(interval) > 0)
                 .toList();
     }
 
     @Override
     public List<Link> findAll() {
-        return jdbcTemplate.query(FIND_ALL_LINKS, new BeanPropertyRowMapper<>(Link.class));
+        return jdbcTemplate.query(FIND_ALL_LINKS, linkRowMapper);
     }
 }

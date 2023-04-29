@@ -3,34 +3,44 @@ package ru.tinkoff.edu.java.scrapper.repository.jooq;
 import java.util.List;
 
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.interfaces.LinkChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.LinkChatRepository;
 
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Chat.CHAT;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Link.LINK;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.LinkChat.LINK_CHAT;
 
-@Repository
+@Slf4j
 @RequiredArgsConstructor
 public class JooqLinkChatRepository implements LinkChatRepository {
     private final DSLContext context;
 
     @Override
+    @Transactional
     public boolean addLinkToChat(long linkId, long chatId) {
-        if (!isSubscribed(linkId, chatId)) {
-            return context.insertInto(LINK_CHAT)
-                    .set(LINK_CHAT.LINKID, linkId)
-                    .set(LINK_CHAT.CHATID, chatId)
-                    .execute() > 0;
+        try {
+            if (!isSubscribed(linkId, chatId)) {
+                return context.insertInto(LINK_CHAT)
+                        .set(LINK_CHAT.LINKID, linkId)
+                        .set(LINK_CHAT.CHATID, chatId)
+                        .execute() > 0;
+            }
+        } catch (DataIntegrityViolationException e) {
+            log.error("Link binding error with chat id");
+            e.printStackTrace();
+            return false;
         }
         return false;
     }
 
     @Override
+    @Transactional
     public boolean removeLinkFromChat(long linkId, long chatId) {
         return context.deleteFrom(LINK_CHAT)
                 .where(LINK_CHAT.CHATID.eq(chatId), LINK_CHAT.LINKID.eq(linkId))
@@ -39,7 +49,8 @@ public class JooqLinkChatRepository implements LinkChatRepository {
 
     @Override
     public boolean isSubscribed(long linkId, long chatId) {
-        return context.select(LINK_CHAT)
+        return context.select(LINK_CHAT.fields())
+                .from(LINK_CHAT)
                 .where(LINK_CHAT.LINKID.eq(linkId), LINK_CHAT.CHATID.eq(chatId))
                 .fetchOne() != null;
     }

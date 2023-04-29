@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.service.jdbc;
+package ru.tinkoff.edu.java.scrapper.service.jooq;
 
 import java.net.URI;
 import java.util.Collection;
@@ -8,16 +8,16 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JdbcLinkService implements LinkService {
-    private final JdbcLinkRepository linkRepository;
-    private final JdbcLinkChatRepository subscription;
-    private final JdbcLinkUpdater linkUpdater;
+public class JooqLinkService implements LinkService {
+    private final JooqLinkRepository linkRepository;
+    private final JooqLinkChatRepository subscription;
+    private final JooqLinkUpdater linkUpdater;
 
     @Override
     @Transactional
