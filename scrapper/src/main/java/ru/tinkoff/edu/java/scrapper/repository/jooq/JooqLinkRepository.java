@@ -22,6 +22,10 @@ public class JooqLinkRepository implements LinkRepository {
     @Transactional
     public Link save(Link link) {
         if (link.getId() == null) {
+            Link alreadySaved = findByLink(link.getLink());
+            if (alreadySaved != null) {
+                return alreadySaved;
+            }
             return context.insertInto(LINK)
                     .set(LINK.LINK_, link.getLink())
                     .returning(LINK.fields())

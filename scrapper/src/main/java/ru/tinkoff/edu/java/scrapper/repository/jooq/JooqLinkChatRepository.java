@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.jooq.DSLContext;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.LinkChatRepository;
@@ -14,6 +16,7 @@ import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Chat.CHAT;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Link.LINK;
 import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.LinkChat.LINK_CHAT;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JooqLinkChatRepository implements LinkChatRepository {
     private final DSLContext context;
@@ -21,11 +24,17 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     @Override
     @Transactional
     public boolean addLinkToChat(long linkId, long chatId) {
-        if (!isSubscribed(linkId, chatId)) {
-            return context.insertInto(LINK_CHAT)
-                    .set(LINK_CHAT.LINKID, linkId)
-                    .set(LINK_CHAT.CHATID, chatId)
-                    .execute() > 0;
+        try {
+            if (!isSubscribed(linkId, chatId)) {
+                return context.insertInto(LINK_CHAT)
+                        .set(LINK_CHAT.LINKID, linkId)
+                        .set(LINK_CHAT.CHATID, chatId)
+                        .execute() > 0;
+            }
+        } catch (DataIntegrityViolationException e) {
+            log.error("Link binding error with chat id");
+            e.printStackTrace();
+            return false;
         }
         return false;
     }

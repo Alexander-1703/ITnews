@@ -4,20 +4,18 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkChatRepository;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaChatRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
+import ru.tinkoff.edu.java.scrapper.service.jpa.JpaSubscriptionService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
@@ -26,11 +24,11 @@ public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
     private static final int EXPECTED_EMPTY_TABLE_SIZE = 0;
 
     @Autowired
-    private JdbcLinkChatRepository linkChatRepository;
+    private JpaSubscriptionService subscriptionService;
     @Autowired
-    private JdbcLinkRepository linkRepository;
+    private JpaLinkRepository linkRepository;
     @Autowired
-    private JdbcChatRepository chatRepository;
+    private JpaChatRepository chatRepository;
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_test_link.sql"})
     @Test
@@ -39,17 +37,16 @@ public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
     public void addLinkToChat_chatExist_returnTrue() {
         long chatId = chatRepository.findAll().get(0).getId();
         long linkId = linkRepository.findAll().get(0).getId();
-        assertTrue(linkChatRepository.addLinkToChat(linkId, chatId));
+        assertTrue(subscriptionService.addLinkToChat(linkId, chatId));
     }
 
     @Sql(scripts = "/sql/link/add_test_link.sql")
     @Test
     @Transactional
     @Rollback
-    public void addLinkToChat_chatNotExist_throwsException() {
+    public void addLinkToChat_chatNotExist_returnFalse() {
         long linkId = linkRepository.findAll().get(0).getId();
-        assertThrows(DataIntegrityViolationException.class,
-                () -> linkChatRepository.addLinkToChat(linkId, NOT_EXISTING_ID));
+        assertFalse(subscriptionService.addLinkToChat(linkId, NOT_EXISTING_ID));
     }
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_test_link.sql"})
@@ -59,8 +56,8 @@ public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
     public void removeLinkFromChat_chatExist_returnTrue() {
         long chatId = chatRepository.findAll().get(0).getId();
         long linkId = linkRepository.findAll().get(0).getId();
-        linkChatRepository.addLinkToChat(linkId, chatId);
-        assertTrue(linkChatRepository.removeLinkFromChat(linkId, chatId));
+        subscriptionService.addLinkToChat(linkId, chatId);
+        assertTrue(subscriptionService.removeLinkFromChat(linkId, chatId));
     }
 
     @Sql(scripts = "/sql/link/add_test_link.sql")
@@ -69,17 +66,16 @@ public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
     @Rollback
     public void removeLinkFromChat_chatNotExist_returnFalse() {
         long linkId = linkRepository.findAll().get(0).getId();
-        assertFalse(linkChatRepository.removeLinkFromChat(linkId, NOT_EXISTING_ID));
+        assertFalse(subscriptionService.removeLinkFromChat(linkId, NOT_EXISTING_ID));
     }
 
     @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
     @Test
     @Transactional
     @Rollback
-    public void addLinkToChat_linkNotExist_throwsException() {
+    public void addLinkToChat_linkNotExist_returnFalse() {
         long chatId = chatRepository.findAll().get(0).getId();
-        assertThrows(DataIntegrityViolationException.class,
-                () -> linkChatRepository.addLinkToChat(NOT_EXISTING_ID, chatId));
+        assertFalse(subscriptionService.addLinkToChat(NOT_EXISTING_ID, chatId));
     }
 
     @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
@@ -88,7 +84,7 @@ public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
     @Rollback
     public void removeLinkFromChat_linkNotExist_returnFalse() {
         long chatId = chatRepository.findAll().get(0).getId();
-        assertFalse(linkChatRepository.removeLinkFromChat(NOT_EXISTING_ID, chatId));
+        assertFalse(subscriptionService.removeLinkFromChat(NOT_EXISTING_ID, chatId));
     }
 
 
@@ -100,9 +96,9 @@ public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
         long linkId = linkRepository.findAll().get(0).getId();
         List<Long> listChatId = chatRepository.findAll().stream().map(Chat::getId).toList();
         for (var chatId : listChatId) {
-            linkChatRepository.addLinkToChat(linkId, chatId);
+            subscriptionService.addLinkToChat(linkId, chatId);
         }
-        assertEquals(EXPECTED_FILLED_TABLE_SIZE, linkChatRepository.findChatsByLinkId(linkId).size());
+        assertEquals(EXPECTED_FILLED_TABLE_SIZE, subscriptionService.findChatsByLinkId(linkId).size());
     }
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_three_links.sql"})
@@ -113,9 +109,9 @@ public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
         long chatId = chatRepository.findAll().get(0).getId();
         List<Long> listLinkId = linkRepository.findAll().stream().map(Link::getId).toList();
         for (var linkId : listLinkId) {
-            linkChatRepository.addLinkToChat(linkId, chatId);
+            subscriptionService.addLinkToChat(linkId, chatId);
         }
-        assertEquals(EXPECTED_FILLED_TABLE_SIZE, linkChatRepository.findLinksByChatId(chatId).size());
+        assertEquals(EXPECTED_FILLED_TABLE_SIZE, subscriptionService.findLinksByChatId(chatId).size());
     }
 
     @Sql(scripts = {"/sql/chat/add_three_chats.sql", "/sql/link/add_test_link.sql"})
@@ -124,7 +120,7 @@ public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
     @Rollback
     public void linkId_findChatsByLinkId_emptyListOfChats() {
         long linkId = linkRepository.findAll().get(0).getId();
-        assertEquals(EXPECTED_EMPTY_TABLE_SIZE, linkChatRepository.findChatsByLinkId(linkId).size());
+        assertEquals(EXPECTED_EMPTY_TABLE_SIZE, subscriptionService.findChatsByLinkId(linkId).size());
     }
 
     @Sql(scripts = {"/sql/chat/add_chat_with_id_0.sql", "/sql/link/add_three_links.sql"})
@@ -133,6 +129,6 @@ public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
     @Rollback
     public void chatId_findLinksByChatId_emptyListOfLinks() {
         long chatId = chatRepository.findAll().get(0).getId();
-        assertEquals(EXPECTED_EMPTY_TABLE_SIZE, linkChatRepository.findLinksByChatId(chatId).size());
+        assertEquals(EXPECTED_EMPTY_TABLE_SIZE, subscriptionService.findLinksByChatId(chatId).size());
     }
 }

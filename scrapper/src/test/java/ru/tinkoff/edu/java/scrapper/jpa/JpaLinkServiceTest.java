@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class JpaLinkServiceTest extends JpaIntegrationEnvironment {
-    private static final long NOT_EXISTING_LINK_ID = -1L;
     private static final int EXPECTED_FILLED_LINK_SIZE = 3;
     private static final int EXPECTED_EMPTY_LINK_SIZE = 0;
     private static final long TEST_CHAT_ID = 0L;
@@ -34,6 +33,7 @@ public class JpaLinkServiceTest extends JpaIntegrationEnvironment {
     private JpaSubscriptionService subscriptionService;
 
     @Test
+    @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
     @Transactional
     @Rollback
     void addLink_notInDB_save() {
@@ -76,5 +76,13 @@ public class JpaLinkServiceTest extends JpaIntegrationEnvironment {
     @Rollback
     void findAll_returnAllLinks() {
         assertEquals(EXPECTED_FILLED_LINK_SIZE, linkService.listAll(TEST_CHAT_ID).size());
+    }
+
+    @Sql(scripts = "/sql/chat/add_chat_with_id_0.sql")
+    @Test
+    @Transactional
+    @Rollback
+    void findAll_emptyList() {
+        assertEquals(EXPECTED_EMPTY_LINK_SIZE, linkService.listAll(TEST_CHAT_ID).size());
     }
 }
