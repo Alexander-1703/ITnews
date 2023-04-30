@@ -1,0 +1,38 @@
+scrapper:
+  scheduler:
+    interval: "10s"
+  update-link-interval: "10s"
+  accessType: jpa
+  use-queue: true
+  rabbitMQ:
+    exchange: bot.exchange
+    queue: link.queue
+    routingKey: link
+
+github:
+  token: ${GITHUB_TOKEN}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+  api-docs:
+    path: /api-docs
+
+client:
+  github-api: "https://api.github.com"
+  stackoverflow-api: "https://api.stackexchange.com/2.2"
+  bot-url: "http://localhost:8081"
+
+spring:
+  liquibase:
+    enabled: false
+  datasource:
+    url: jdbc:postgresql://localhost:5433/scrapper
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: rmuser
+    password: rmpassword

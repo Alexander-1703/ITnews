@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.RequiredArgsConstructor;
-import ru.tinkoff.edu.java.scrapper.client.interfaces.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaChatRepository;
@@ -14,6 +13,7 @@ import ru.tinkoff.edu.java.scrapper.service.jpa.JpaLinkService;
 import ru.tinkoff.edu.java.scrapper.service.jpa.JpaLinkUpdater;
 import ru.tinkoff.edu.java.scrapper.service.jpa.JpaSubscriptionService;
 import ru.tinkoff.edu.java.scrapper.service.jpa.JpaTgChatService;
+import ru.tinkoff.edu.java.scrapper.service.producer.ScrapperProducer;
 
 @Configuration
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ import ru.tinkoff.edu.java.scrapper.service.jpa.JpaTgChatService;
 public class JpaAccessConfiguration {
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
-    private final BotClient botClient;
+    private final ScrapperProducer scrapperProducer;
     private final JpaLinkRepository linkRepository;
     private final JpaChatRepository chatRepository;
 
@@ -32,7 +32,7 @@ public class JpaAccessConfiguration {
 
     @Bean
     public JpaLinkUpdater linkUpdater() {
-        return new JpaLinkUpdater(linkRepository, subscriptionService(), gitHubClient, stackOverflowClient, botClient);
+        return new JpaLinkUpdater(linkRepository, subscriptionService(), gitHubClient, stackOverflowClient, scrapperProducer);
     }
 
     @Bean

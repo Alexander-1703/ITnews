@@ -1,0 +1,8 @@
+bot:
+  name: "ItSubscriberBot"
+  token: ${BOT_TOKEN}
+  updates:
+    fixed-delay: "1s"
+
+server:
+  port: 8081

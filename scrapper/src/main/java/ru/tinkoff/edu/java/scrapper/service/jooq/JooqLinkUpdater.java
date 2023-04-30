@@ -14,7 +14,6 @@ import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
 import ru.tinkoff.edu.java.linkparser.dtos.StackOverflowData;
 import ru.tinkoff.edu.java.linkparser.dtos.UrlData;
 import ru.tinkoff.edu.java.linkparser.handlers.Handler;
-import ru.tinkoff.edu.java.scrapper.client.interfaces.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.dto.UpdatedLink;
@@ -26,6 +25,7 @@ import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
+import ru.tinkoff.edu.java.scrapper.service.producer.ScrapperProducer;
 
 @RequiredArgsConstructor
 public class JooqLinkUpdater implements LinkUpdater {
@@ -33,7 +33,7 @@ public class JooqLinkUpdater implements LinkUpdater {
     private final JooqLinkChatRepository subscription;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
-    private final BotClient botClient;
+    private final ScrapperProducer scrapperProducer;
 
     @Value("#{@linkUpdateInterval}")
     Duration interval;
@@ -153,7 +153,7 @@ public class JooqLinkUpdater implements LinkUpdater {
                             .map(Chat::getId)
                             .toList()
             );
-            botClient.postUpdate(request);
+            scrapperProducer.postUpdate(request);
         });
     }
 }

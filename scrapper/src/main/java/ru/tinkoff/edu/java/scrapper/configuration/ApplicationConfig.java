@@ -15,7 +15,9 @@ import jakarta.validation.constraints.NotNull;
 @ConfigurationProperties(prefix = "scrapper", ignoreUnknownFields = false)
 public record ApplicationConfig(@NotNull Scheduler scheduler,
                                 @JsonProperty("update-link-interval") @NotNull Duration updateLinkInterval,
-                                @NotNull AccessType accessType) {
+                                @NotNull AccessType accessType,
+                                @JsonProperty("use-queue") boolean useQueue,
+                                RabbitMQ rabbitMQ) {
     public record Scheduler(Duration interval) {
     }
 
@@ -23,5 +25,10 @@ public record ApplicationConfig(@NotNull Scheduler scheduler,
         JDBC,
         JPA,
         JOOQ;
+    }
+
+    public record RabbitMQ(String exchange,
+                           String queue,
+                           String routingKey) {
     }
 }
