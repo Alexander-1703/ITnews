@@ -5,9 +5,9 @@ scrapper:
   accessType: jpa
   use-queue: true
   rabbitMQ:
-    exchange: bot.exchange
+    exchange: links.exchange
     queue: link.queue
-    routingKey: link
+    routingKey: update-link
 
 github:
   token: ${GITHUB_TOKEN}
@@ -33,6 +33,6 @@ spring:
     driverClassName: org.postgresql.Driver
   rabbitmq:
     host: localhost
-    port: 5672
+    port: 5673
     username: rmuser
     password: rmpassword

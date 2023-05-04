@@ -11,8 +11,11 @@ import jakarta.validation.constraints.NotNull;
 @ConfigurationProperties(prefix = "bot", ignoreUnknownFields = false)
 public record ApplicationConfig(@NotNull String name,
                                 @NotNull String token,
-                                @NotNull Updates updates)
-{
+                                @NotNull Updates updates,
+                                @NotNull RabbitMQ rabbitMQ) {
     public record Updates(Duration fixedDelay) {
+    }
+
+    public record RabbitMQ(String exchange, String queue, String routingKey) {
     }
 }

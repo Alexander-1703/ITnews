@@ -4,6 +4,7 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,6 +16,8 @@ import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 @Configuration
 @ConditionalOnProperty(prefix = "scrapper", name = "use-queue", havingValue = "true")
 public class RabbitMQConfig {
+    private static final String DLQ = ".dlq";
+
     private final String exchange;
     private final String queue;
     private final String routingKey;
@@ -32,7 +35,11 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue queue() {
-        return new Queue(queue, true);
+        return QueueBuilder
+                .durable(queue)
+                .withArgument("x-dead-letter-exchange", exchange + DLQ)
+                .withArgument("x-dead-letter-routing-key", routingKey + DLQ)
+                .build();
     }
 
     @Bean
