@@ -1,0 +1,39 @@
+name: scrapper
+
+on:
+  push:
+    paths:
+      - 'scrapper/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Maven package
+        run: mvn package -pl scrapper -am
+
+      - name: Build and push Docker image
+          env:
+            DOCKER_USERNAME: ${{ secrets.USERNAME }}
+            DOCKER_PASSWORD: ${{ secrets.PASSWORD }}
+            IMAGE_NAME: ghcr.io/Alexander-1703/scrapper:latest
+          run: |
+            docker build /scrapper -t $IMAGE_NAME
+            echo $PASSWORD | docker login ghcr.io -u $USERNAME --password-stdin
+            docker push $IMAGE_NAME
+
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Static code analysis
+        run: mvn -pl scrapper -am checkstyle:check
+
