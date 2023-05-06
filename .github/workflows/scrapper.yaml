@@ -30,7 +30,7 @@ jobs:
           PASSWORD: ${{ secrets.PASSWORD }}
           IMAGE_NAME: ghcr.io/alexander-1703/scrapper:latest
         run: |
-          docker build /scrapper -t $IMAGE_NAME
+          docker build ./scrapper -t $IMAGE_NAME
           echo $PASSWORD | docker login ghcr.io -u $USERNAME --password-stdin
           docker push $IMAGE_NAME
 
