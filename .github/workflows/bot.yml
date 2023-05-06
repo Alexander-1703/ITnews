@@ -25,14 +25,14 @@ jobs:
         run: mvn package -pl bot -am
 
       - name: Build and push Docker image
-          env:
-            DOCKER_USERNAME: ${{ secrets.USERNAME }}
-            DOCKER_PASSWORD: ${{ secrets.PASSWORD }}
-            IMAGE_NAME: ghcr.io/Alexander-1703/bot:latest
-          run: |
-            docker build /bot -t $IMAGE_NAME
-            echo $PASSWORD | docker login ghcr.io -u $USERNAME --password-stdin
-            docker push $IMAGE_NAME
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          IMAGE_NAME: ghcr.io/Alexander-1703/bot:latest
+        run: |
+          docker build /bot -t $IMAGE_NAME
+          echo $PASSWORD | docker login ghcr.io -u $USERNAME --password-stdin
+          docker push $IMAGE_NAME
 
   checkstyle:
     runs-on: ubuntu-latest
