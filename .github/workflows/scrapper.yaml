@@ -21,6 +21,12 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Add environment variable to application.yaml
+        run: |
+          sed -i "s/\${GITHUB_TOKEN}/$GITHUB_TOKEN/g" ./scrapper/src/main/resources/application.yaml
+        env:
+          GITHUB_TOKEN: ${{ secrets.SCRAPPER_GITHUB_TOKEN }}
+
       - name: Maven package
         run: mvn package -pl scrapper -am
 
