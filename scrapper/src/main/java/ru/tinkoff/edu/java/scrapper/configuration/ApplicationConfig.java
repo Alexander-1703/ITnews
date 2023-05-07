@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Validated
@@ -16,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
 public record ApplicationConfig(@NotNull Scheduler scheduler,
                                 @JsonProperty("update-link-interval") @NotNull Duration updateLinkInterval,
                                 @NotNull AccessType accessType,
-                                @JsonProperty("use-queue") boolean useQueue,
+                                boolean useQueue,
                                 RabbitMQ rabbitMQ) {
     public record Scheduler(Duration interval) {
     }
@@ -27,8 +28,8 @@ public record ApplicationConfig(@NotNull Scheduler scheduler,
         JOOQ;
     }
 
-    public record RabbitMQ(String exchange,
-                           String queue,
-                           String routingKey) {
+    public record RabbitMQ(@NotBlank String exchange,
+                           @NotBlank String queue,
+                           @NotBlank String routingKey) {
     }
 }

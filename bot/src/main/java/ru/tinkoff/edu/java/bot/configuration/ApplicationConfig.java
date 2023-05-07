@@ -5,6 +5,7 @@ import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Validated
@@ -16,6 +17,8 @@ public record ApplicationConfig(@NotNull String name,
     public record Updates(Duration fixedDelay) {
     }
 
-    public record RabbitMQ(String exchange, String queue, String routingKey) {
+    public record RabbitMQ(@NotBlank String exchange,
+                           @NotBlank String queue,
+                           @NotBlank String routingKey) {
     }
 }
