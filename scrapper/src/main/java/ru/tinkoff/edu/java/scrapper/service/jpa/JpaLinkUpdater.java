@@ -9,13 +9,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.linkparser.HandlerBuilder;
 import ru.tinkoff.edu.java.linkparser.Request.Request;
 import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
 import ru.tinkoff.edu.java.linkparser.dtos.StackOverflowData;
 import ru.tinkoff.edu.java.linkparser.dtos.UrlData;
 import ru.tinkoff.edu.java.linkparser.handlers.Handler;
-import ru.tinkoff.edu.java.scrapper.client.interfaces.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.dto.UpdatedLink;
@@ -26,18 +26,20 @@ import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
+import ru.tinkoff.edu.java.scrapper.service.producer.ScrapperProducer;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JpaLinkUpdater implements LinkUpdater {
     private final JpaLinkRepository linkRepository;
     private final JpaSubscriptionService subscriptionService;
 
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
-    private final BotClient botClient;
+    private final ScrapperProducer scrapperProducer;
 
     @Value("#{@linkUpdateInterval}")
-    Duration interval;
+    private Duration interval;
 
     @Override
     public int update() {
@@ -155,7 +157,9 @@ public class JpaLinkUpdater implements LinkUpdater {
                             .map(Chat::getId)
                             .toList()
             );
-            botClient.postUpdate(request);
+            if (!scrapperProducer.postUpdate(request)) {
+                log.warn("Update failed!");
+            }
         });
     }
 }

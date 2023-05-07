@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import lombok.RequiredArgsConstructor;
-import ru.tinkoff.edu.java.scrapper.client.interfaces.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcChatRepository;
@@ -15,6 +14,7 @@ import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkService;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkUpdater;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcTgChatService;
+import ru.tinkoff.edu.java.scrapper.service.producer.ScrapperProducer;
 
 @Configuration
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ public class JdbcAccessConfiguration {
     private final JdbcTemplate jdbcTemplate;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
-    private final BotClient botClient;
+    private final ScrapperProducer scrapperProducer;
 
     @Bean
     public JdbcLinkRepository linkRepository() {
@@ -42,7 +42,7 @@ public class JdbcAccessConfiguration {
 
     @Bean
     public JdbcLinkUpdater linkUpdater() {
-        return new JdbcLinkUpdater(linkRepository(), linkChatRepository(), gitHubClient, stackOverflowClient, botClient);
+        return new JdbcLinkUpdater(linkRepository(), linkChatRepository(), gitHubClient, stackOverflowClient, scrapperProducer);
     }
 
     @Bean

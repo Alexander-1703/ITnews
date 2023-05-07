@@ -1,0 +1,19 @@
+bot:
+  name: "ItSubscriberBot"
+  token: ${BOT_TOKEN}
+  updates:
+    fixed-delay: "1s"
+  rabbitMQ:
+    exchange: links.exchange
+    queue: link.queue
+    routingKey: update-link
+
+server:
+  port: 8081
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5673
+    username: rmuser
+    password: rmpassword

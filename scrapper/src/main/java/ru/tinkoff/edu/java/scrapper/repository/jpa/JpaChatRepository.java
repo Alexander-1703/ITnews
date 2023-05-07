@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 
 @Repository
-@ConditionalOnProperty(prefix = "scrapper", name = "accessType", havingValue = "jpa")
+@ConditionalOnProperty(prefix = "scrapper", name = "accessType", havingValue = "jpa", matchIfMissing = true)
 public interface JpaChatRepository extends JpaRepository<Chat, Long> {
 
     @Query("SELECT c FROM Chat c JOIN FETCH c.links WHERE c.id = :chatId")

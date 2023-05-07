@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.RequiredArgsConstructor;
-import ru.tinkoff.edu.java.scrapper.client.interfaces.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.interfaces.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqChatRepository;
@@ -15,6 +14,7 @@ import ru.tinkoff.edu.java.scrapper.repository.jooq.JooqLinkRepository;
 import ru.tinkoff.edu.java.scrapper.service.jooq.JooqLinkService;
 import ru.tinkoff.edu.java.scrapper.service.jooq.JooqLinkUpdater;
 import ru.tinkoff.edu.java.scrapper.service.jooq.JooqTgChatService;
+import ru.tinkoff.edu.java.scrapper.service.producer.ScrapperProducer;
 
 @Configuration
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ public class JooqAccessConfiguration {
     private final DSLContext context;
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
-    private final BotClient botClient;
+    private final ScrapperProducer scrapperProducer;
 
     @Bean
     public JooqLinkRepository linkRepository() {
@@ -42,7 +42,7 @@ public class JooqAccessConfiguration {
 
     @Bean
     public JooqLinkUpdater linkUpdater() {
-        return new JooqLinkUpdater(linkRepository(), linkChatRepository(), gitHubClient, stackOverflowClient, botClient);
+        return new JooqLinkUpdater(linkRepository(), linkChatRepository(), gitHubClient, stackOverflowClient, scrapperProducer);
     }
 
     @Bean
