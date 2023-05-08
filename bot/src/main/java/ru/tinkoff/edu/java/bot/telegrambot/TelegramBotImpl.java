@@ -24,12 +24,14 @@ import ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor.UserMessageProcesso
 
 @Component
 @Slf4j
-public class TelegramBotImpl implements TgBot {
+public final class TelegramBotImpl implements TgBot {
     private final TelegramBot bot;
     private final UserMessageProcessor userMessageProcessor;
 
-    public TelegramBotImpl(@Value("${bot.token}") String token,
-                           @Autowired UserMessageProcessor userMessageProcessor) {
+    public TelegramBotImpl(
+        @Value("${bot.token}") final String token,
+        @Autowired final UserMessageProcessor userMessageProcessor
+    ) {
         this.userMessageProcessor = userMessageProcessor;
         bot = new TelegramBot(token);
     }
@@ -44,8 +46,8 @@ public class TelegramBotImpl implements TgBot {
     public void start() {
         setupUpdateListener();
         BotCommand[] commands = userMessageProcessor.commands().stream()
-                .map(Command::toApiCommand)
-                .toArray(BotCommand[]::new);
+            .map(Command::toApiCommand)
+            .toArray(BotCommand[]::new);
         execute(new SetMyCommands(commands));
     }
 
@@ -77,7 +79,7 @@ public class TelegramBotImpl implements TgBot {
 
     public void sendUpdate(LinkUpdateRequest update) {
         String message = "Появилось обновление в " + update.uri().toString() + ":\n" +
-                update.description();
+            update.description();
         update.tgChatIds().forEach(chatId -> {
             SendMessage sendMessage = new SendMessage(chatId, message).disableWebPagePreview(true);
             execute(sendMessage);
