@@ -65,13 +65,20 @@ public class JpaLinkUpdater implements LinkUpdater {
         if (urlData == null) {
             return null;
         }
+        return handleLink(urlData, link);
+    }
 
-        UpdatedLink updatedLink = null;
+    private UpdatedLink handleLink(UrlData urlData, Link link) {
         switch (urlData.getClass().getSimpleName()) {
-            case "GitHubData" -> updatedLink = handleGitHubLink(link, (GitHubData) urlData);
-            case "StackOverflowData" -> updatedLink = handleStackOverflowLink(link, (StackOverflowData) urlData);
+            case "GitHubData" -> {
+                return handleGitHubLink(link, (GitHubData) urlData);
+            }
+            case "StackOverflowData" -> {
+                return handleStackOverflowLink(link, (StackOverflowData) urlData);
+            }
+            default -> log.warn("Unexpected class to handle");
         }
-        return updatedLink;
+        return null;
     }
 
     private UpdatedLink handleGitHubLink(Link link, GitHubData gitHubData) {
@@ -91,9 +98,12 @@ public class JpaLinkUpdater implements LinkUpdater {
 
     private void appendCountAndChanges(StringBuilder description, String title, int count, String changes) {
         description
-            .append(title).append(": ")
-            .append(count).append(" ")
-            .append(changes).append("\n");
+            .append(title)
+            .append(": ")
+            .append(count)
+            .append(" ")
+            .append(changes)
+            .append("\n");
     }
 
     private String checkGithubChanges(Link link, GitHubRepositoryResponse response) {

@@ -33,7 +33,6 @@ public class JooqLinkChatRepository implements LinkChatRepository {
             }
         } catch (DataIntegrityViolationException e) {
             log.error("Link binding error with chat id");
-            e.printStackTrace();
             return false;
         }
         return false;
