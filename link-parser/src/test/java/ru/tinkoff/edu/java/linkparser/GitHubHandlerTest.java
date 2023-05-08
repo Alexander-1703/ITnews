@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.java.linkparser;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,20 +26,22 @@ class GitHubHandlerTest {
 
     @ParameterizedTest(name = "{index}: {0} is processed to {1}:{2}")
     @CsvSource(value = {
-            "https://github.com/Alexander-1703/ITnews/blob/master/pom.xml, Alexander-1703, ITnews",
-            "https://github.com/Alexander-1703/ITnews, Alexander-1703, ITnews"
+        "https://github.com/Alexander-1703/ITnews/blob/master/pom.xml, Alexander-1703, ITnews",
+        "https://github.com/Alexander-1703/ITnews, Alexander-1703, ITnews"
     })
     @DisplayName("a test that checks that valid github links are being processed")
     public void correctGithubLinkTest(String link, String user, String repo) {
         request = new Request(link);
-        assertEquals(new GitHubData(user, repo),
-                handler.parse(request));
+        assertEquals(
+            new GitHubData(user, repo),
+            handler.parse(request)
+        );
     }
 
     @ParameterizedTest(name = "{index}: {0} not processed")
     @ValueSource(strings = {
-            "https://github.com",
-            "https://github.com/Alexander-1703/"
+        "https://github.com",
+        "https://github.com/Alexander-1703/"
     })
     @DisplayName("a test that checks that invalid links to github are not processed")
     public void githubBadLinkTest(String link) {
@@ -50,9 +51,9 @@ class GitHubHandlerTest {
 
     @ParameterizedTest(name = "{index}: {0} not processed")
     @ValueSource(strings = {
-            "https://stackoverflow.com/questions/75736984/output-of-program-is-inccorect",
-            "https://gitlab.com/questions/75736984/output-of-program-is-inccorect",
-            "https://github.ru/questions/75736984/output-of-program-is-inccorect"
+        "https://stackoverflow.com/questions/75736984/output-of-program-is-inccorect",
+        "https://gitlab.com/questions/75736984/output-of-program-is-inccorect",
+        "https://github.ru/questions/75736984/output-of-program-is-inccorect"
     })
     @DisplayName("a test that checks that a link not to a github is not processed")
     public void notGithubLinkTest(String link) {

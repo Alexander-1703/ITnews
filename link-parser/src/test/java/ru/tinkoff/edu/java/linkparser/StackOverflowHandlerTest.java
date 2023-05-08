@@ -27,11 +27,11 @@ class StackOverflowHandlerTest {
 
     @ParameterizedTest(name = "{index}: {0} is processed to {1}")
     @CsvSource(value = {
-            "https://stackoverflow.com/questions/6690745/converting-integer-to-long, 6690745",
-            "https://stackoverflow.com/questions/75736984, 75736984",
-            "stackoverflow.com/questions/75736984/output-of-program-is-inccorect, 75736984",
-            "https://www.stackoverflow.com/questions/75736984, 75736984",
-            "http://stackoverflow.com/questions/75736984/output-of-program-is-inccorect, 75736984"
+        "https://stackoverflow.com/questions/6690745/converting-integer-to-long, 6690745",
+        "https://stackoverflow.com/questions/75736984, 75736984",
+        "stackoverflow.com/questions/75736984/output-of-program-is-inccorect, 75736984",
+        "https://www.stackoverflow.com/questions/75736984, 75736984",
+        "http://stackoverflow.com/questions/75736984/output-of-program-is-inccorect, 75736984"
     })
     @DisplayName("a test that checks that valid stackoverflow links are being processed")
     public void correctStackoverflowLinkTest(String link, long id) {
@@ -41,20 +41,18 @@ class StackOverflowHandlerTest {
 
     @ParameterizedTest(name = "{index}: {0} not processed")
     @ValueSource(strings = {
-            "https://stackoverflow.com/questions/output-of-program-is-inccorect",
-            "https://stackoverflow.com/75736984/output-of-program-is-inccorect"
+        "https://stackoverflow.com/questions/output-of-program-is-inccorect",
+        "https://stackoverflow.com/75736984/output-of-program-is-inccorect"
     })
     @DisplayName("a test that checks that invalid links to stackoverflow are not processed")
     public void stackoverflowBadLinkTest() {
 
     }
 
-
-
     @ParameterizedTest(name = "{index}: {0} not processed")
     @ValueSource(strings = {
-            "https://github.com/Alexander-1703/ITnews/blob/master/pom.xml",
-            "http://queueoverflow.com/questions/75736984/output-of-program-is-inccorect"
+        "https://github.com/Alexander-1703/ITnews/blob/master/pom.xml",
+        "http://queueoverflow.com/questions/75736984/output-of-program-is-inccorect"
     })
     @DisplayName("a test that checks that a link not to a stackoverflow is not processed")
     public void defineLinkTest(String link) {
