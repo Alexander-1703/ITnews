@@ -1,8 +1,10 @@
 package ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands;
 
 import org.springframework.stereotype.Component;
+
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+
 import ru.tinkoff.edu.java.bot.enums.CommandEnum;
 
 @Component

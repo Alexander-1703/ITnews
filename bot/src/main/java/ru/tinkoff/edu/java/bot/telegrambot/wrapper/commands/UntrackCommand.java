@@ -1,10 +1,12 @@
 package ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands;
 
 import org.springframework.stereotype.Component;
+
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.SendMessage;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.bot.enums.CommandEnum;
@@ -15,11 +17,11 @@ import ru.tinkoff.edu.java.bot.service.interfaces.LinkService;
 @RequiredArgsConstructor
 public class UntrackCommand implements Command {
     private static final String UNTRACK_MESSAGE = """
-            Ссылка удалена из списка отслеживания.
-            Вы больше не будете получать уведомления об изменениях
-            """;
+        Ссылка удалена из списка отслеживания.
+        Вы больше не будете получать уведомления об изменениях
+        """;
     private static final String REQUEST_LINK_TO_REMOVE =
-            "Отправьте ссылку на ресурс, который больше не хотите отслеживать.";
+        "Отправьте ссылку на ресурс, который больше не хотите отслеживать.";
     private final LinkService linkService;
 
     @Override

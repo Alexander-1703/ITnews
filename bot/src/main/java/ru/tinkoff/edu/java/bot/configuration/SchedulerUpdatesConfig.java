@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.java.bot.configuration;
 
 import java.time.Duration;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

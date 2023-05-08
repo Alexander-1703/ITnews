@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.java.bot.commands;
 
-
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,8 +38,9 @@ public class CommandTest {
         //given
         long chatId = 0L;
         List<LinkResponse> linkList = List.of(
-                new LinkResponse(chatId, URI.create("github.com/Alexander-1703/ITnews")),
-                new LinkResponse(chatId, URI.create("stackoverflow.com/questions/123")));
+            new LinkResponse(chatId, URI.create("github.com/Alexander-1703/ITnews")),
+            new LinkResponse(chatId, URI.create("stackoverflow.com/questions/123"))
+        );
         Update update = getUpdate(chatId);
         when(linkService.getLinks(chatId)).thenReturn(linkList);
 
@@ -48,8 +48,10 @@ public class CommandTest {
         SendMessage message = listCommand.handle(update);
 
         //then
-        assertEquals(linkList.stream().map(item -> item.uri().toString()).collect(Collectors.joining("\n")),
-                message.getParameters().get("text"));
+        assertEquals(
+            linkList.stream().map(item -> item.uri().toString()).collect(Collectors.joining("\n")),
+            message.getParameters().get("text")
+        );
     }
 
     @Test

@@ -28,17 +28,16 @@ public class UnknownCommandTest {
     private static final String UNKNOWN_COMMAND_MESSAGE = "Такой команды не существует!";
     private UserMessageProcessor userMessageProcessor;
 
-
     @BeforeEach
     public void setup() {
         LinkService linkService = Mockito.mock(LinkService.class);
         ChatService chatService = Mockito.mock(ChatService.class);
         userMessageProcessor = new DefaultUserMessageProcessor(List.of(
-                new HelpCommand(),
-                new StartCommand(chatService),
-                new TrackCommand(linkService),
-                new UntrackCommand(linkService),
-                new ListCommand()
+            new HelpCommand(),
+            new StartCommand(chatService),
+            new TrackCommand(linkService),
+            new UntrackCommand(linkService),
+            new ListCommand()
         ));
     }
 

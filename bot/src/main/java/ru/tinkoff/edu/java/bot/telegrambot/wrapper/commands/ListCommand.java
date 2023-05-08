@@ -2,10 +2,13 @@ package ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +52,8 @@ public class ListCommand implements Command {
             return EMPTY_LIST_MESSAGE;
         }
         return linkList.stream()
-                .map(item -> item.uri().toString())
-                .collect(Collectors.joining("\n"));
+            .map(item -> item.uri().toString())
+            .collect(Collectors.joining("\n"));
     }
 
 }

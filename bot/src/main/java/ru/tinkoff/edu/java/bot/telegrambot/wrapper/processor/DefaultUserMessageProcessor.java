@@ -1,10 +1,13 @@
 package ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor;
 
 import java.util.List;
+
 import org.springframework.stereotype.Component;
+
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.Command;
 
 @Component

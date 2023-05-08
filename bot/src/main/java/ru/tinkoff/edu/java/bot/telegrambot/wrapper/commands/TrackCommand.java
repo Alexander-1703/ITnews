@@ -1,13 +1,16 @@
 package ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands;
 
 import org.springframework.stereotype.Component;
+
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.bot.enums.CommandEnum;
 import ru.tinkoff.edu.java.bot.service.interfaces.LinkService;
+
 import com.pengrad.telegrambot.model.request.ForceReply;
 
 @Slf4j
@@ -15,9 +18,9 @@ import com.pengrad.telegrambot.model.request.ForceReply;
 @RequiredArgsConstructor
 public class TrackCommand implements Command {
     private static final String TRACK_MESSAGE = """
-            Ссылка добавлена в список отслеживания.
-            Вы получите уведомление обо всех изменениях
-            """;
+        Ссылка добавлена в список отслеживания.
+        Вы получите уведомление обо всех изменениях
+        """;
     private static final String ERROR_MESSAGE = "Вы не прислали ссылку";
     private static final String REQUEST_LINK_TO_ADD = "Отправьте ссылку на ресурс, который хотите отслеживать.";
     private final LinkService linkService;
