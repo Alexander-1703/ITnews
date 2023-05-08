@@ -27,6 +27,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.SCRAPPER_GITHUB_TOKEN }}
 
+      - name: Build scrapper-jooq
+        run: mvn package -pl scrapper-jooq -am
+
+      - name: Generate jooq files in scrapper
+        run: java -jar scrapper-jooq/target/scrapper-jooq-1.0-SNAPSHOT.jar
+
       - name: Maven package
         run: mvn package -pl scrapper -am
 
