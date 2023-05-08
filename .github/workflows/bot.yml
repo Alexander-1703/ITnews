@@ -35,8 +35,8 @@ jobs:
           docker push $IMAGE_NAME
 
   checkstyle:
+    needs: build
     runs-on: ubuntu-latest
-    depends-on: build
     steps:
       - uses: actions/checkout@v3
 
