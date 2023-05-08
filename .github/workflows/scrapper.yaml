@@ -4,9 +4,6 @@ on:
   push:
     paths:
       - 'scrapper/**'
-  pull_request:
-    paths:
-      - 'scrapper/**'
 
 jobs:
   build:
