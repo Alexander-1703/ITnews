@@ -48,7 +48,17 @@ jobs:
 
   checkstyle:
     runs-on: ubuntu-latest
+    depends-on: build
     steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
       - name: Static code analysis
         run: mvn -pl scrapper -am checkstyle:check
 
