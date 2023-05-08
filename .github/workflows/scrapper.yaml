@@ -60,5 +60,5 @@ jobs:
           cache: maven
 
       - name: Static code analysis
-        run: mvn -pl scrapper -am checkstyle:check
+        run: mvn -pl scrapper -am checkstyle:check -Dcheckstyle.config.location=checkstyle.xml
 

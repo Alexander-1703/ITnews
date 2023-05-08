@@ -48,5 +48,5 @@ jobs:
           cache: maven
 
       - name: Static code analysis
-        run: mvn -pl bot -am checkstyle:check
+        run: mvn -pl bot -am checkstyle:check -Dcheckstyle.config.location=checkstyle.xml
 
