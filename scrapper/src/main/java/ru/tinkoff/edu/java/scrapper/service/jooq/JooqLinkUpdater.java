@@ -96,21 +96,18 @@ public class JooqLinkUpdater implements LinkUpdater {
 
     private void appendCountAndChanges(StringBuilder description, String title, int count, String changes) {
         description
-            .append(title)
-            .append(": ")
-            .append(count)
-            .append(" ")
-            .append(changes)
-            .append("\n");
+            .append(title).append(": ")
+            .append(count).append(" ")
+            .append(changes).append("\n");
     }
 
     private String checkGithubChanges(Link link, GitHubRepositoryResponse response) {
         StringBuilder description = new StringBuilder();
 
-        String forksChanges = link.getGhForksCount() == null ? "" :
-            showChangesBetweenInts(link.getGhForksCount(), response.forksCount());
-        String branchChanges = link.getGhBranchesCount() == null ? "" :
-            showChangesBetweenInts(link.getGhBranchesCount(), response.branchesCount());
+        String forksChanges = link.getGhForksCount() == null ? ""
+            : showChangesBetweenInts(link.getGhForksCount(), response.forksCount());
+        String branchChanges = link.getGhBranchesCount() == null ? ""
+            : showChangesBetweenInts(link.getGhBranchesCount(), response.branchesCount());
 
         appendCountAndChanges(description, "Количество форков", response.forksCount(), forksChanges);
         appendCountAndChanges(description, "Количество веток", response.branchesCount(), branchChanges);
@@ -142,8 +139,8 @@ public class JooqLinkUpdater implements LinkUpdater {
     private String checkStackoverflowChanges(Link link, StackOverflowQuestionResponse response) {
         StringBuilder description = new StringBuilder();
 
-        String answerChanges = link.getSoAnswersCount() == null ? "" :
-            showChangesBetweenInts(link.getSoAnswersCount(), response.answerCount());
+        String answerChanges = link.getSoAnswersCount() == null ? ""
+            : showChangesBetweenInts(link.getSoAnswersCount(), response.answerCount());
 
         appendCountAndChanges(description, "Количество ответов", response.answerCount(), answerChanges);
         return description.toString();
