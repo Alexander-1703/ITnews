@@ -17,7 +17,7 @@ import ru.tinkoff.edu.java.scrapper.service.producer.ScrapperProducer;
 
 @Configuration
 @RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "scrapper", name = "accessType", havingValue = "jpa")
+@ConditionalOnProperty(prefix = "scrapper", name = "accessType", havingValue = "jpa", matchIfMissing = true)
 public class JpaAccessConfiguration {
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;

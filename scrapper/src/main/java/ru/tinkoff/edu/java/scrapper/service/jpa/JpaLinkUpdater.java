@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.linkparser.HandlerBuilder;
 import ru.tinkoff.edu.java.linkparser.Request.Request;
 import ru.tinkoff.edu.java.linkparser.dtos.GitHubData;
@@ -28,6 +29,7 @@ import ru.tinkoff.edu.java.scrapper.service.LinkUpdater;
 import ru.tinkoff.edu.java.scrapper.service.producer.ScrapperProducer;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JpaLinkUpdater implements LinkUpdater {
     private final JpaLinkRepository linkRepository;
     private final JpaSubscriptionService subscriptionService;
@@ -37,7 +39,7 @@ public class JpaLinkUpdater implements LinkUpdater {
     private final ScrapperProducer scrapperProducer;
 
     @Value("#{@linkUpdateInterval}")
-    Duration interval;
+    private Duration interval;
 
     @Override
     public int update() {
@@ -155,7 +157,9 @@ public class JpaLinkUpdater implements LinkUpdater {
                             .map(Chat::getId)
                             .toList()
             );
-            scrapperProducer.postUpdate(request);
+            if (!scrapperProducer.postUpdate(request)) {
+                log.warn("Update failed!");
+            }
         });
     }
 }

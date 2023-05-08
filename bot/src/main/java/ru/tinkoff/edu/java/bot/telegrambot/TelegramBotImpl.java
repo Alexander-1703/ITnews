@@ -1,11 +1,9 @@
 package ru.tinkoff.edu.java.bot.telegrambot;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.BotCommand;
@@ -15,7 +13,6 @@ import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
-
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.bot.dto.request.LinkUpdateRequest;
@@ -78,8 +75,8 @@ public final class TelegramBotImpl implements TgBot {
     }
 
     public void sendUpdate(LinkUpdateRequest update) {
-        String message = "Появилось обновление в " + update.uri().toString() + ":\n" +
-            update.description();
+        String message = "Появилось обновление в " + update.uri().toString() + ":\n"
+            + update.description();
         update.tgChatIds().forEach(chatId -> {
             SendMessage sendMessage = new SendMessage(chatId, message).disableWebPagePreview(true);
             execute(sendMessage);

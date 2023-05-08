@@ -1,16 +1,13 @@
 package ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands;
 
 import org.springframework.stereotype.Component;
-
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.bot.enums.CommandEnum;
 import ru.tinkoff.edu.java.bot.service.interfaces.LinkService;
-
 import com.pengrad.telegrambot.model.request.ForceReply;
 
 @Slf4j
@@ -54,7 +51,7 @@ public class TrackCommand implements Command {
     @Override
     public boolean supports(Update update) {
         Message message = update.message();
-        return message.text().startsWith("/") && getCommand().equals(message.text().split(" ")[0].substring(1)) ||
-                message.replyToMessage() != null && message.replyToMessage().text().equals(REQUEST_LINK_TO_ADD);
+        return message.text().startsWith("/") && getCommand().equals(message.text().split(" ")[0].substring(1))
+            || message.replyToMessage() != null && message.replyToMessage().text().equals(REQUEST_LINK_TO_ADD);
     }
 }

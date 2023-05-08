@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 
 @Repository
-@ConditionalOnProperty(prefix = "scrapper", name = "accessType", havingValue = "jpa")
+@ConditionalOnProperty(prefix = "scrapper", name = "accessType", havingValue = "jpa", matchIfMissing = true)
 public interface JpaLinkRepository extends JpaRepository<Link, Long> {
 
     Link findByLink(String link);

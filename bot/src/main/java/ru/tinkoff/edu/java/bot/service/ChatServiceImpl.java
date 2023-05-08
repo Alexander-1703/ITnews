@@ -1,7 +1,6 @@
 package ru.tinkoff.edu.java.bot.service;
 
 import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 import ru.tinkoff.edu.java.bot.service.interfaces.ChatService;

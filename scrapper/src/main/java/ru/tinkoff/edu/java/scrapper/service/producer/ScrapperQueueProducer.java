@@ -6,11 +6,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 import ru.tinkoff.edu.java.scrapper.dto.request.LinkUpdateRequest;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @ConditionalOnProperty(prefix = "scrapper", name = "use-queue", havingValue = "true")
 public class ScrapperQueueProducer implements ScrapperProducer {
     private final RabbitTemplate rabbitTemplate;
@@ -23,6 +25,7 @@ public class ScrapperQueueProducer implements ScrapperProducer {
                     config.rabbitMQ().routingKey(),
                     request);
         } catch (AmqpException e) {
+            log.error("Error sending message to queue: {}", e.getMessage());
             return false;
         }
         return true;

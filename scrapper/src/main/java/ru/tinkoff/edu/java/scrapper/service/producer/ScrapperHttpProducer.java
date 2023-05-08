@@ -9,7 +9,7 @@ import ru.tinkoff.edu.java.scrapper.dto.request.LinkUpdateRequest;
 
 @RequiredArgsConstructor
 @Service
-@ConditionalOnProperty(prefix = "scrapper", name = "use-queue", havingValue = "false")
+@ConditionalOnProperty(prefix = "scrapper", name = "use-queue", havingValue = "false", matchIfMissing = true)
 public class ScrapperHttpProducer implements ScrapperProducer {
     private final BotClient botClient;
 
