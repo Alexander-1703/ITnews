@@ -19,34 +19,34 @@ public class JooqChatRepository implements ChatRepository {
     @Transactional
     public Chat add(long chatId) {
         return context.insertInto(CHAT)
-                .set(CHAT.ID, chatId)
-                .onConflict(CHAT.ID)
-                .doUpdate()
-                .set(CHAT.ID, CHAT.ID)
-                .returning(CHAT.fields())
-                .fetchOneInto(Chat.class);
+            .set(CHAT.ID, chatId)
+            .onConflict(CHAT.ID)
+            .doUpdate()
+            .set(CHAT.ID, CHAT.ID)
+            .returning(CHAT.fields())
+            .fetchOneInto(Chat.class);
     }
 
     @Override
     @Transactional
     public boolean remove(long id) {
         return context.deleteFrom(CHAT)
-                .where(CHAT.ID.eq(id))
-                .execute() > 0;
+            .where(CHAT.ID.eq(id))
+            .execute() > 0;
     }
 
     @Override
     public Chat findById(long chatId) {
         return context.select(CHAT.fields())
-                .from(CHAT)
-                .where(CHAT.ID.eq(chatId))
-                .fetchOneInto(Chat.class);
+            .from(CHAT)
+            .where(CHAT.ID.eq(chatId))
+            .fetchOneInto(Chat.class);
     }
 
     @Override
     public List<Chat> findAll() {
         return context.select(CHAT.fields())
-                .from(CHAT)
-                .fetchInto(Chat.class);
+            .from(CHAT)
+            .fetchInto(Chat.class);
     }
 }

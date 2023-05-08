@@ -16,9 +16,9 @@ public class DatabaseMigrationTest extends IntegrationEnvironment {
     @Test
     public void applyMigrationsTest() {
         try (Connection connection = DriverManager.getConnection(
-                PSQL_CONTAINER.getJdbcUrl(),
-                PSQL_CONTAINER.getUsername(),
-                PSQL_CONTAINER.getPassword()
+            PSQL_CONTAINER.getJdbcUrl(),
+            PSQL_CONTAINER.getUsername(),
+            PSQL_CONTAINER.getPassword()
         )) {
             assertTrue(tableExist(connection, "link"));
             assertTrue(tableExist(connection, "link_chat"));

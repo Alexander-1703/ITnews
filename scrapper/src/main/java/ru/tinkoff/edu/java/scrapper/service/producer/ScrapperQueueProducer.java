@@ -21,9 +21,11 @@ public class ScrapperQueueProducer implements ScrapperProducer {
     @Override
     public boolean postUpdate(LinkUpdateRequest request) {
         try {
-            rabbitTemplate.convertAndSend(config.rabbitMQ().exchange(),
-                    config.rabbitMQ().routingKey(),
-                    request);
+            rabbitTemplate.convertAndSend(
+                config.rabbitMQ().exchange(),
+                config.rabbitMQ().routingKey(),
+                request
+            );
         } catch (AmqpException e) {
             log.error("Error sending message to queue: {}", e.getMessage());
             return false;

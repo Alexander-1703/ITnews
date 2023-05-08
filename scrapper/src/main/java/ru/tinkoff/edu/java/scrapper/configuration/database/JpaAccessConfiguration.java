@@ -32,7 +32,13 @@ public class JpaAccessConfiguration {
 
     @Bean
     public JpaLinkUpdater linkUpdater() {
-        return new JpaLinkUpdater(linkRepository, subscriptionService(), gitHubClient, stackOverflowClient, scrapperProducer);
+        return new JpaLinkUpdater(
+            linkRepository,
+            subscriptionService(),
+            gitHubClient,
+            stackOverflowClient,
+            scrapperProducer
+        );
     }
 
     @Bean

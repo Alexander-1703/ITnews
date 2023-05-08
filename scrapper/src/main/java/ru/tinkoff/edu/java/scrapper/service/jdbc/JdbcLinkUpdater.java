@@ -74,7 +74,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
 
     private UpdatedLink handleGitHubLink(Link link, GitHubData gitHubData) {
         GitHubRepositoryResponse response =
-                gitHubClient.fetchRepository(gitHubData.username(), gitHubData.repos()).block();
+            gitHubClient.fetchRepository(gitHubData.username(), gitHubData.repos()).block();
 
         if (response != null && !link.getUpdatedAt().equals(response.updatedAt())) {
             String description = checkGithubChanges(link, response);
@@ -90,18 +90,18 @@ public class JdbcLinkUpdater implements LinkUpdater {
 
     private void appendCountAndChanges(StringBuilder description, String title, int count, String changes) {
         description
-                .append(title).append(": ")
-                .append(count).append(" ")
-                .append(changes).append("\n");
+            .append(title).append(": ")
+            .append(count).append(" ")
+            .append(changes).append("\n");
     }
 
     private String checkGithubChanges(Link link, GitHubRepositoryResponse response) {
         StringBuilder description = new StringBuilder();
 
         String forksChanges = link.getGhForksCount() == null ? "" :
-                showChangesBetweenInts(link.getGhForksCount(), response.forksCount());
+            showChangesBetweenInts(link.getGhForksCount(), response.forksCount());
         String branchChanges = link.getGhBranchesCount() == null ? "" :
-                showChangesBetweenInts(link.getGhBranchesCount(), response.branchesCount());
+            showChangesBetweenInts(link.getGhBranchesCount(), response.branchesCount());
 
         appendCountAndChanges(description, "Количество форков", response.forksCount(), forksChanges);
         appendCountAndChanges(description, "Количество веток", response.branchesCount(), branchChanges);
@@ -119,7 +119,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
 
     private UpdatedLink handleStackOverflowLink(Link link, StackOverflowData stackOverflowData) {
         StackOverflowQuestionResponse response =
-                stackOverflowClient.fetchQuestion(stackOverflowData.id()).block();
+            stackOverflowClient.fetchQuestion(stackOverflowData.id()).block();
         if (response != null && !link.getUpdatedAt().equals(response.updatedAt())) {
             String description = checkStackoverflowChanges(link, response);
 
@@ -134,7 +134,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
         StringBuilder description = new StringBuilder();
 
         String answerChanges = link.getSoAnswersCount() == null ? "" :
-                showChangesBetweenInts(link.getSoAnswersCount(), response.answerCount());
+            showChangesBetweenInts(link.getSoAnswersCount(), response.answerCount());
 
         appendCountAndChanges(description, "Количество ответов", response.answerCount(), answerChanges);
         return description.toString();
@@ -149,12 +149,12 @@ public class JdbcLinkUpdater implements LinkUpdater {
         updatedLinkList.forEach(updatedLink -> {
             Link link = updatedLink.link();
             LinkUpdateRequest request = new LinkUpdateRequest(
-                    link.getId(),
-                    URI.create(link.getLink()),
-                    updatedLink.description(),
-                    subscription.findChatsByLinkId(link.getId()).stream()
-                            .map(Chat::getId)
-                            .toList()
+                link.getId(),
+                URI.create(link.getLink()),
+                updatedLink.description(),
+                subscription.findChatsByLinkId(link.getId()).stream()
+                    .map(Chat::getId)
+                    .toList()
             );
             if (!scrapperProducer.postUpdate(request)) {
                 log.warn("Update failed!");

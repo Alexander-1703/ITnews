@@ -23,20 +23,19 @@ public class BotClientImpl implements BotClient {
     @PostConstruct
     public void buildBotWebClient() {
         botWebClient = WebClient.builder()
-                .baseUrl(url)
-                .build();
+            .baseUrl(url)
+            .build();
     }
-
 
     @Override
     public boolean postUpdate(LinkUpdateRequest request) {
         HttpStatusCode httpStatusCode = Objects.requireNonNull(botWebClient.post()
-                        .uri(BOT_URI)
-                        .bodyValue(request)
-                        .retrieve()
-                        .toBodilessEntity()
-                        .block())
-                .getStatusCode();
+                .uri(BOT_URI)
+                .bodyValue(request)
+                .retrieve()
+                .toBodilessEntity()
+                .block())
+            .getStatusCode();
         return httpStatusCode == HttpStatus.OK;
     }
 }

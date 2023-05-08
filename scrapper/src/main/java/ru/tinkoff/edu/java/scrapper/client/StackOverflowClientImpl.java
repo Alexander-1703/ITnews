@@ -20,24 +20,24 @@ public class StackOverflowClientImpl implements StackOverflowClient {
     @PostConstruct
     public void buildStackoverflowWebClient() {
         stackoverflowWebClient = WebClient.builder()
-                .baseUrl(url)
-                .build();
+            .baseUrl(url)
+            .build();
     }
 
     @Override
     public Mono<StackOverflowQuestionResponse> fetchQuestion(long questionId) {
         return stackoverflowWebClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(STACKOVERFLOW_URI)
-                        .queryParam("site", "stackoverflow")
-                        .build(questionId))
-                .retrieve()
-                .bodyToMono(StackOverflowQuestionsListResponse.class)
-                .flatMap(wrapper -> {
-                    if (wrapper.items().isEmpty()) {
-                        return Mono.empty();
-                    }
-                    return Mono.just(wrapper.items().get(0));
-                });
+            .uri(uriBuilder -> uriBuilder
+                .path(STACKOVERFLOW_URI)
+                .queryParam("site", "stackoverflow")
+                .build(questionId))
+            .retrieve()
+            .bodyToMono(StackOverflowQuestionsListResponse.class)
+            .flatMap(wrapper -> {
+                if (wrapper.items().isEmpty()) {
+                    return Mono.empty();
+                }
+                return Mono.just(wrapper.items().get(0));
+            });
     }
 }

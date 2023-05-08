@@ -42,7 +42,13 @@ public class JdbcAccessConfiguration {
 
     @Bean
     public JdbcLinkUpdater linkUpdater() {
-        return new JdbcLinkUpdater(linkRepository(), linkChatRepository(), gitHubClient, stackOverflowClient, scrapperProducer);
+        return new JdbcLinkUpdater(
+            linkRepository(),
+            linkChatRepository(),
+            gitHubClient,
+            stackOverflowClient,
+            scrapperProducer
+        );
     }
 
     @Bean
