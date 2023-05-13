@@ -4,13 +4,19 @@ on:
   push:
     paths:
       - 'scrapper/**'
+      - '.github/workflows/scrapper.yml'
   pull_request:
     paths:
       - 'scrapper/**'
+      - '.github/workflows/scrapper.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      USERNAME: ${{ secrets.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      IMAGE_NAME: ghcr.io/alexander-1703/scrapper:latest
     steps:
       - uses: actions/checkout@v3
 
@@ -22,8 +28,7 @@ jobs:
           cache: maven
 
       - name: Add environment variable to application.yaml
-        run: |
-          sed -i "s/\${GITHUB_TOKEN}/$GITHUB_TOKEN/g" ./scrapper/src/main/resources/application.yaml
+        run: sed -i "s/\${GITHUB_TOKEN}/$GITHUB_TOKEN/g" ./scrapper/src/main/resources/application.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.SCRAPPER_GITHUB_TOKEN }}
 
@@ -36,13 +41,11 @@ jobs:
       - name: Maven package
         run: mvn package -pl scrapper -am
 
-      - name: Build and push Docker image
-        env:
-          USERNAME: ${{ secrets.USERNAME }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          IMAGE_NAME: ghcr.io/alexander-1703/scrapper:latest
+      - name: Build scrapper docker image
+        run: docker build ./scrapper -t $IMAGE_NAME
+
+      - name: Push scrapper docker image
         run: |
-          docker build ./scrapper -t $IMAGE_NAME
           echo $PASSWORD | docker login ghcr.io -u $USERNAME --password-stdin
           docker push $IMAGE_NAME
 
