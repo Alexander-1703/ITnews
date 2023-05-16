@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - 'scrapper/**'
+      - 'link-parser/**'
       - '.github/workflows/scrapper.yml'
   pull_request:
     paths:
       - 'scrapper/**'
+      - 'link-parser/**'
       - '.github/workflows/scrapper.yml'
 
 jobs:
