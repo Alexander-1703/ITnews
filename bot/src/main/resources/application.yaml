@@ -29,6 +29,13 @@ management:
         prometheus: "metrics"
       exposure:
         include: [ "info", "health", "prometheus" ]
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true
   metrics:
     tags:
       application: ${spring.application.name}

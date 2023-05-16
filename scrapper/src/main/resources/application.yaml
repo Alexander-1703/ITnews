@@ -25,7 +25,7 @@ client:
 
 spring:
   liquibase:
-    enabled: true
+    enabled: false
   datasource:
     url: jdbc:postgresql://localhost:5433/scrapper
     username: postgres
@@ -48,6 +48,13 @@ management:
         prometheus: "metrics"
       exposure:
         include: [ "info", "health", "prometheus" ]
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true
   metrics:
     tags:
       application: ${spring.application.name}
