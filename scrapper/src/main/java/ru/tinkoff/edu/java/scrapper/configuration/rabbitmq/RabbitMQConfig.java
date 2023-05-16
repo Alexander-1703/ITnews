@@ -36,18 +36,18 @@ public class RabbitMQConfig {
     @Bean
     public Queue queue() {
         return QueueBuilder
-                .durable(queue)
-                .withArgument("x-dead-letter-exchange", exchange + DLQ)
-                .withArgument("x-dead-letter-routing-key", routingKey + DLQ)
-                .build();
+            .durable(queue)
+            .withArgument("x-dead-letter-exchange", exchange + DLQ)
+            .withArgument("x-dead-letter-routing-key", routingKey + DLQ)
+            .build();
     }
 
     @Bean
     public Binding binding(Queue queue, DirectExchange exchange) {
         return BindingBuilder
-                .bind(queue)
-                .to(exchange)
-                .with(routingKey);
+            .bind(queue)
+            .to(exchange)
+            .with(routingKey);
     }
 
     @Bean

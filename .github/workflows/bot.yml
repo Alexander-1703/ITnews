@@ -1,0 +1,56 @@
+name: bot
+
+on:
+  push:
+    paths:
+      - 'bot/**'
+      - '.github/workflows/bot.yml'
+  pull_request:
+    paths:
+      - 'bot/**'
+      - '.github/workflows/bot.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      USERNAME: ${{ secrets.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      IMAGE_NAME: ghcr.io/alexander-1703/bot:latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Maven package
+        run: mvn package -pl bot -am
+
+      - name: Build bot docker image
+        run: docker build ./bot -t $IMAGE_NAME
+
+      - name: Push bot docker image
+        run: |
+          echo $PASSWORD | docker login ghcr.io -u $USERNAME --password-stdin
+          docker push $IMAGE_NAME
+
+  checkstyle:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Static code analysis
+        run: mvn -pl bot -am checkstyle:check -Dcheckstyle.config.location=checkstyle.xml
+

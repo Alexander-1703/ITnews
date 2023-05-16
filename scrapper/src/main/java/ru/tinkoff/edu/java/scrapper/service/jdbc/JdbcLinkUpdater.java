@@ -63,18 +63,25 @@ public class JdbcLinkUpdater implements LinkUpdater {
         if (urlData == null) {
             return null;
         }
+        return handleLink(urlData, link);
+    }
 
-        UpdatedLink updatedLink = null;
+    private UpdatedLink handleLink(UrlData urlData, Link link) {
         switch (urlData.getClass().getSimpleName()) {
-            case "GitHubData" -> updatedLink = handleGitHubLink(link, (GitHubData) urlData);
-            case "StackOverflowData" -> updatedLink = handleStackOverflowLink(link, (StackOverflowData) urlData);
+            case "GitHubData" -> {
+                return handleGitHubLink(link, (GitHubData) urlData);
+            }
+            case "StackOverflowData" -> {
+                return handleStackOverflowLink(link, (StackOverflowData) urlData);
+            }
+            default -> log.warn("Unexpected class to handle");
         }
-        return updatedLink;
+        return null;
     }
 
     private UpdatedLink handleGitHubLink(Link link, GitHubData gitHubData) {
         GitHubRepositoryResponse response =
-                gitHubClient.fetchRepository(gitHubData.username(), gitHubData.repos()).block();
+            gitHubClient.fetchRepository(gitHubData.username(), gitHubData.repos()).block();
 
         if (response != null && !link.getUpdatedAt().equals(response.updatedAt())) {
             String description = checkGithubChanges(link, response);
@@ -90,18 +97,18 @@ public class JdbcLinkUpdater implements LinkUpdater {
 
     private void appendCountAndChanges(StringBuilder description, String title, int count, String changes) {
         description
-                .append(title).append(": ")
-                .append(count).append(" ")
-                .append(changes).append("\n");
+            .append(title).append(": ")
+            .append(count).append(" ")
+            .append(changes).append("\n");
     }
 
     private String checkGithubChanges(Link link, GitHubRepositoryResponse response) {
         StringBuilder description = new StringBuilder();
 
-        String forksChanges = link.getGhForksCount() == null ? "" :
-                showChangesBetweenInts(link.getGhForksCount(), response.forksCount());
-        String branchChanges = link.getGhBranchesCount() == null ? "" :
-                showChangesBetweenInts(link.getGhBranchesCount(), response.branchesCount());
+        String forksChanges = link.getGhForksCount() == null ? ""
+            : showChangesBetweenInts(link.getGhForksCount(), response.forksCount());
+        String branchChanges = link.getGhBranchesCount() == null ? ""
+            : showChangesBetweenInts(link.getGhBranchesCount(), response.branchesCount());
 
         appendCountAndChanges(description, "Количество форков", response.forksCount(), forksChanges);
         appendCountAndChanges(description, "Количество веток", response.branchesCount(), branchChanges);
@@ -119,7 +126,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
 
     private UpdatedLink handleStackOverflowLink(Link link, StackOverflowData stackOverflowData) {
         StackOverflowQuestionResponse response =
-                stackOverflowClient.fetchQuestion(stackOverflowData.id()).block();
+            stackOverflowClient.fetchQuestion(stackOverflowData.id()).block();
         if (response != null && !link.getUpdatedAt().equals(response.updatedAt())) {
             String description = checkStackoverflowChanges(link, response);
 
@@ -133,8 +140,8 @@ public class JdbcLinkUpdater implements LinkUpdater {
     private String checkStackoverflowChanges(Link link, StackOverflowQuestionResponse response) {
         StringBuilder description = new StringBuilder();
 
-        String answerChanges = link.getSoAnswersCount() == null ? "" :
-                showChangesBetweenInts(link.getSoAnswersCount(), response.answerCount());
+        String answerChanges = link.getSoAnswersCount() == null ? ""
+            : showChangesBetweenInts(link.getSoAnswersCount(), response.answerCount());
 
         appendCountAndChanges(description, "Количество ответов", response.answerCount(), answerChanges);
         return description.toString();
@@ -149,12 +156,12 @@ public class JdbcLinkUpdater implements LinkUpdater {
         updatedLinkList.forEach(updatedLink -> {
             Link link = updatedLink.link();
             LinkUpdateRequest request = new LinkUpdateRequest(
-                    link.getId(),
-                    URI.create(link.getLink()),
-                    updatedLink.description(),
-                    subscription.findChatsByLinkId(link.getId()).stream()
-                            .map(Chat::getId)
-                            .toList()
+                link.getId(),
+                URI.create(link.getLink()),
+                updatedLink.description(),
+                subscription.findChatsByLinkId(link.getId()).stream()
+                    .map(Chat::getId)
+                    .toList()
             );
             if (!scrapperProducer.postUpdate(request)) {
                 log.warn("Update failed!");

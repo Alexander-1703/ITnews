@@ -39,8 +39,8 @@ public class JpaLinkServiceTest extends JpaIntegrationEnvironment {
     void addLink_notInDB_save() {
         linkService.add(TEST_CHAT_ID, URI.create(TEST_LINK));
         assertAll(
-                () -> assertNotNull(linkRepository.findByLink(TEST_LINK)),
-                () -> assertEquals(TEST_LINK, subscriptionService.findLinksByChatId(TEST_CHAT_ID).get(0).getLink())
+            () -> assertNotNull(linkRepository.findByLink(TEST_LINK)),
+            () -> assertEquals(TEST_LINK, subscriptionService.findLinksByChatId(TEST_CHAT_ID).get(0).getLink())
         );
     }
 

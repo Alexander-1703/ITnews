@@ -65,8 +65,8 @@ public class RabbitMQConfig {
     @Bean
     public Binding deadLetterBinding(Queue queue, DirectExchange exchange) {
         return BindingBuilder
-                .bind(queue)
-                .to(exchange)
-                .with(routingKey + DLQ);
+            .bind(queue)
+            .to(exchange)
+            .with(routingKey + DLQ);
     }
 }

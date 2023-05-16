@@ -52,8 +52,8 @@ public class ListCommand implements Command {
             return EMPTY_LIST_MESSAGE;
         }
         return linkList.stream()
-                .map(item -> item.uri().toString())
-                .collect(Collectors.joining("\n"));
+            .map(item -> item.uri().toString())
+            .collect(Collectors.joining("\n"));
     }
 
 }

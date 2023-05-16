@@ -17,11 +17,11 @@ import ru.tinkoff.edu.java.bot.service.interfaces.LinkService;
 @RequiredArgsConstructor
 public class UntrackCommand implements Command {
     private static final String UNTRACK_MESSAGE = """
-            Ссылка удалена из списка отслеживания.
-            Вы больше не будете получать уведомления об изменениях
-            """;
+        Ссылка удалена из списка отслеживания.
+        Вы больше не будете получать уведомления об изменениях
+        """;
     private static final String REQUEST_LINK_TO_REMOVE =
-            "Отправьте ссылку на ресурс, который больше не хотите отслеживать.";
+        "Отправьте ссылку на ресурс, который больше не хотите отслеживать.";
     private final LinkService linkService;
 
     @Override
@@ -53,7 +53,7 @@ public class UntrackCommand implements Command {
     @Override
     public boolean supports(Update update) {
         Message message = update.message();
-        return message.text().startsWith("/") && getCommand().equals(message.text().split(" ")[0].substring(1)) ||
-                message.replyToMessage() != null && message.replyToMessage().text().equals(REQUEST_LINK_TO_REMOVE);
+        return message.text().startsWith("/") && getCommand().equals(message.text().split(" ")[0].substring(1))
+            || message.replyToMessage() != null && message.replyToMessage().text().equals(REQUEST_LINK_TO_REMOVE);
     }
 }

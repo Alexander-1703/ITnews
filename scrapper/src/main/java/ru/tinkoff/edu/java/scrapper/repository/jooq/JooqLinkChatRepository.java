@@ -27,13 +27,12 @@ public class JooqLinkChatRepository implements LinkChatRepository {
         try {
             if (!isSubscribed(linkId, chatId)) {
                 return context.insertInto(LINK_CHAT)
-                        .set(LINK_CHAT.LINKID, linkId)
-                        .set(LINK_CHAT.CHATID, chatId)
-                        .execute() > 0;
+                    .set(LINK_CHAT.LINKID, linkId)
+                    .set(LINK_CHAT.CHATID, chatId)
+                    .execute() > 0;
             }
         } catch (DataIntegrityViolationException e) {
             log.error("Link binding error with chat id");
-            e.printStackTrace();
             return false;
         }
         return false;
@@ -43,35 +42,35 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     @Transactional
     public boolean removeLinkFromChat(long linkId, long chatId) {
         return context.deleteFrom(LINK_CHAT)
-                .where(LINK_CHAT.CHATID.eq(chatId), LINK_CHAT.LINKID.eq(linkId))
-                .execute() > 0;
+            .where(LINK_CHAT.CHATID.eq(chatId), LINK_CHAT.LINKID.eq(linkId))
+            .execute() > 0;
     }
 
     @Override
     public boolean isSubscribed(long linkId, long chatId) {
         return context.select(LINK_CHAT.fields())
-                .from(LINK_CHAT)
-                .where(LINK_CHAT.LINKID.eq(linkId), LINK_CHAT.CHATID.eq(chatId))
-                .fetchOne() != null;
+            .from(LINK_CHAT)
+            .where(LINK_CHAT.LINKID.eq(linkId), LINK_CHAT.CHATID.eq(chatId))
+            .fetchOne() != null;
     }
 
     @Override
     public List<Chat> findChatsByLinkId(long linkId) {
         return context.select(CHAT.fields())
-                .from(CHAT)
-                .join(LINK_CHAT)
-                .on(CHAT.ID.eq(LINK_CHAT.CHATID))
-                .where(LINK_CHAT.LINKID.eq(linkId))
-                .fetchInto(Chat.class);
+            .from(CHAT)
+            .join(LINK_CHAT)
+            .on(CHAT.ID.eq(LINK_CHAT.CHATID))
+            .where(LINK_CHAT.LINKID.eq(linkId))
+            .fetchInto(Chat.class);
     }
 
     @Override
     public List<Link> findLinksByChatId(long chatId) {
         return context.select(LINK.fields())
-                .from(LINK)
-                .join(LINK_CHAT)
-                .on(LINK.ID.eq(LINK_CHAT.LINKID))
-                .where(LINK_CHAT.CHATID.eq(chatId))
-                .fetchInto(Link.class);
+            .from(LINK)
+            .join(LINK_CHAT)
+            .on(LINK.ID.eq(LINK_CHAT.LINKID))
+            .where(LINK_CHAT.CHATID.eq(chatId))
+            .fetchInto(Link.class);
     }
 }

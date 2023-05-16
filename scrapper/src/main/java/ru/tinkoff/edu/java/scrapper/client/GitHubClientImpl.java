@@ -25,33 +25,33 @@ public class GitHubClientImpl implements GitHubClient {
     @PostConstruct
     public void buildGithubWebClient() {
         githubWebClient = WebClient.builder()
-                .baseUrl(url)
-                .defaultHeader(HttpHeaders.AUTHORIZATION, githubAccessToken)
-                .build();
+            .baseUrl(url)
+            .defaultHeader(HttpHeaders.AUTHORIZATION, githubAccessToken)
+            .build();
     }
 
     @Override
     public Mono<GitHubRepositoryResponse> fetchRepository(String owner, String repo) {
         return githubWebClient.get()
-                .uri(GITHUB_URI, owner, repo)
-                .retrieve()
-                .bodyToMono(GitHubRepositoryResponse.class)
-                .zipWith(getBranches(owner, repo))
-                .map(tuple -> new GitHubRepositoryResponse(
-                        tuple.getT1().id(),
-                        tuple.getT1().fullName(),
-                        tuple.getT1().updatedAt(),
-                        tuple.getT1().forksCount(),
-                        tuple.getT2().size()
-                ));
+            .uri(GITHUB_URI, owner, repo)
+            .retrieve()
+            .bodyToMono(GitHubRepositoryResponse.class)
+            .zipWith(getBranches(owner, repo))
+            .map(tuple -> new GitHubRepositoryResponse(
+                tuple.getT1().id(),
+                tuple.getT1().fullName(),
+                tuple.getT1().updatedAt(),
+                tuple.getT1().forksCount(),
+                tuple.getT2().size()
+            ));
     }
 
     private Mono<List<String>> getBranches(String owner, String repo) {
         return githubWebClient.get()
-                .uri(GITHUB_URI + "/branches", owner, repo)
-                .retrieve()
-                .bodyToFlux(GithubBranchResponse.class)
-                .map(GithubBranchResponse::name)
-                .collectList();
+            .uri(GITHUB_URI + "/branches", owner, repo)
+            .retrieve()
+            .bodyToFlux(GithubBranchResponse.class)
+            .map(GithubBranchResponse::name)
+            .collectList();
     }
 }

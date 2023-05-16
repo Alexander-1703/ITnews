@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.java.bot.client;
 
-
 import ru.tinkoff.edu.java.bot.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.bot.dto.response.ListLinkResponse;
 

@@ -42,7 +42,13 @@ public class JooqAccessConfiguration {
 
     @Bean
     public JooqLinkUpdater linkUpdater() {
-        return new JooqLinkUpdater(linkRepository(), linkChatRepository(), gitHubClient, stackOverflowClient, scrapperProducer);
+        return new JooqLinkUpdater(
+            linkRepository(),
+            linkChatRepository(),
+            gitHubClient,
+            stackOverflowClient,
+            scrapperProducer
+        );
     }
 
     @Bean

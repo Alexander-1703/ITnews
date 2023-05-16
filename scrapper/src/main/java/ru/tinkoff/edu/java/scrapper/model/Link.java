@@ -54,8 +54,8 @@ public class Link {
 
     @ManyToMany
     @JoinTable(name = "link_chat",
-            joinColumns = @JoinColumn(name = "linkid"),
-            inverseJoinColumns = @JoinColumn(name = "chatid"))
+               joinColumns = @JoinColumn(name = "linkid"),
+               inverseJoinColumns = @JoinColumn(name = "chatid"))
     private Set<Chat> chats = new HashSet<>();
 
     @PreUpdate

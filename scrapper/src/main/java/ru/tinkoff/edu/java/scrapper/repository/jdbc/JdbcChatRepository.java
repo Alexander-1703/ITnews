@@ -41,7 +41,8 @@ public class JdbcChatRepository implements ChatRepository {
     @Override
     public Chat findById(long chatId) {
         return jdbcTemplate.queryForStream(FIND_CHAT_BY_ID, ps -> ps.setLong(1, chatId),
-                chatRowMapper).findFirst().orElse(null);
+            chatRowMapper
+        ).findFirst().orElse(null);
     }
 
     @Override

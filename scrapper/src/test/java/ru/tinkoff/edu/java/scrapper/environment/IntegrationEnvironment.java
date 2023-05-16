@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.java.scrapper.environment;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
@@ -45,18 +44,18 @@ public abstract class IntegrationEnvironment {
         @Bean
         public DataSource dataSource() {
             return DataSourceBuilder.create()
-                    .url(PSQL_CONTAINER.getJdbcUrl())
-                    .username(PSQL_CONTAINER.getUsername())
-                    .password(PSQL_CONTAINER.getPassword())
-                    .build();
+                .url(PSQL_CONTAINER.getJdbcUrl())
+                .username(PSQL_CONTAINER.getUsername())
+                .password(PSQL_CONTAINER.getPassword())
+                .build();
         }
     }
 
     private static void executeDatabaseMigrations() {
         try (Connection connection = DriverManager.getConnection(
-                PSQL_CONTAINER.getJdbcUrl(),
-                PSQL_CONTAINER.getUsername(),
-                PSQL_CONTAINER.getPassword()
+            PSQL_CONTAINER.getJdbcUrl(),
+            PSQL_CONTAINER.getUsername(),
+            PSQL_CONTAINER.getPassword()
         )) {
             ResourceAccessor resourceAccessor = new DirectoryResourceAccessor(PATH_TO_CHANGELOG);
             Database postgres = new PostgresDatabase();

@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record StackOverflowQuestionsListResponse(
-        @JsonProperty("items")
-        List<StackOverflowQuestionResponse> items
+    @JsonProperty("items")
+    List<StackOverflowQuestionResponse> items
 ) {
 }

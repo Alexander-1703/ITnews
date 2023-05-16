@@ -87,7 +87,6 @@ public class JpaSubscriptionServiceTest extends JpaChatServiceTest {
         assertFalse(subscriptionService.removeLinkFromChat(NOT_EXISTING_ID, chatId));
     }
 
-
     @Sql(scripts = {"/sql/chat/add_three_chats.sql", "/sql/link/add_test_link.sql"})
     @Test
     @Transactional

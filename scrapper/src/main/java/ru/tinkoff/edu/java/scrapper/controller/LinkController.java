@@ -32,8 +32,8 @@ public class LinkController {
     @GetMapping()
     public ListLinkResponse getLinks(@RequestHeader(CHAT_ID) @PositiveOrZero Long id) {
         List<LinkResponse> response = linkService.listAll(id).stream()
-                .map(link -> new LinkResponse(link.getId(), URI.create(link.getLink())))
-                .toList();
+            .map(link -> new LinkResponse(link.getId(), URI.create(link.getLink())))
+            .toList();
         return new ListLinkResponse(response, response.size());
     }
 
@@ -45,7 +45,10 @@ public class LinkController {
     }
 
     @DeleteMapping()
-    public LinkResponse removeLink(@RequestHeader(CHAT_ID) @PositiveOrZero Long id, @RequestBody LinkRequest removeRequest) {
+    public LinkResponse removeLink(
+        @RequestHeader(CHAT_ID) @PositiveOrZero Long id,
+        @RequestBody LinkRequest removeRequest
+    ) {
         URI uri = URI.create(removeRequest.link());
         Link link = linkService.remove(id, uri);
         return new LinkResponse(link.getId(), uri);

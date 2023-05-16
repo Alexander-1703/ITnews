@@ -18,9 +18,9 @@ import com.pengrad.telegrambot.model.request.ForceReply;
 @RequiredArgsConstructor
 public class TrackCommand implements Command {
     private static final String TRACK_MESSAGE = """
-            Ссылка добавлена в список отслеживания.
-            Вы получите уведомление обо всех изменениях
-            """;
+        Ссылка добавлена в список отслеживания.
+        Вы получите уведомление обо всех изменениях
+        """;
     private static final String ERROR_MESSAGE = "Вы не прислали ссылку";
     private static final String REQUEST_LINK_TO_ADD = "Отправьте ссылку на ресурс, который хотите отслеживать.";
     private final LinkService linkService;
@@ -54,7 +54,7 @@ public class TrackCommand implements Command {
     @Override
     public boolean supports(Update update) {
         Message message = update.message();
-        return message.text().startsWith("/") && getCommand().equals(message.text().split(" ")[0].substring(1)) ||
-                message.replyToMessage() != null && message.replyToMessage().text().equals(REQUEST_LINK_TO_ADD);
+        return message.text().startsWith("/") && getCommand().equals(message.text().split(" ")[0].substring(1))
+            || message.replyToMessage() != null && message.replyToMessage().text().equals(REQUEST_LINK_TO_ADD);
     }
 }

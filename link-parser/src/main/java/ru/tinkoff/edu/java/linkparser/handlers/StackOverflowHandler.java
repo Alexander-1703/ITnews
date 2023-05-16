@@ -9,7 +9,9 @@ import ru.tinkoff.edu.java.linkparser.dtos.StackOverflowData;
 import ru.tinkoff.edu.java.linkparser.dtos.UrlData;
 
 public class StackOverflowHandler extends AbstractHandler {
-    private static final String REGEX_PATTERN_STACKOVERFLOW = "^(https?://)?(www\\.)?stackoverflow\\.com/questions(/.*)$";
+    private static final int MAX_PATH_COMPONENTS = 3;
+    private static final String REGEX_PATTERN_STACKOVERFLOW =
+        "^(https?://)?(www\\.)?stackoverflow\\.com/questions(/.*)$";
 
     public StackOverflowHandler(Handler nextHandler) {
         super(nextHandler);
@@ -28,7 +30,7 @@ public class StackOverflowHandler extends AbstractHandler {
         try {
             URI uri = new URI(request.link());
             String[] pathComponents = uri.getPath().split("/");
-            if (pathComponents.length >= 3) {
+            if (pathComponents.length >= MAX_PATH_COMPONENTS) {
                 return new StackOverflowData(Long.parseLong(pathComponents[2]));
             }
         } catch (URISyntaxException | NumberFormatException e) {

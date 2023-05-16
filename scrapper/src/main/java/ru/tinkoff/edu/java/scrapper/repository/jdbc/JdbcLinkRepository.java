@@ -21,7 +21,7 @@ public class JdbcLinkRepository implements LinkRepository {
     private static final String FIND_LINK_BY_LINK = "SELECT * FROM link WHERE link = ?";
     private static final String FIND_ALL_LINKS = "SELECT * FROM link";
     private static final String UPDATE_LINK =
-            "UPDATE link SET link = ?, updatedat = ?, ghforks = ?, ghbranches = ?, soanswers = ? WHERE id = ?";
+        "UPDATE link SET link = ?, updatedat = ?, ghforks = ?, ghbranches = ?, soanswers = ? WHERE id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Link> linkRowMapper = new LinkRowMapper();
@@ -39,7 +39,8 @@ public class JdbcLinkRepository implements LinkRepository {
         }
 
         jdbcTemplate.update(UPDATE_LINK, link.getLink(), link.getUpdatedAt(), link.getGhForksCount(),
-                link.getGhBranchesCount(), link.getSoAnswersCount(), link.getId());
+            link.getGhBranchesCount(), link.getSoAnswersCount(), link.getId()
+        );
         return link;
     }
 
@@ -52,20 +53,22 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public Link findById(long linkId) {
         return jdbcTemplate.queryForStream(FIND_LINK_BY_ID, ps -> ps.setLong(1, linkId),
-                linkRowMapper).findFirst().orElse(null);
+            linkRowMapper
+        ).findFirst().orElse(null);
     }
 
     @Override
     public Link findByLink(String link) {
         return jdbcTemplate.queryForStream(FIND_LINK_BY_LINK, ps -> ps.setString(1, link),
-                linkRowMapper).findFirst().orElse(null);
+            linkRowMapper
+        ).findFirst().orElse(null);
     }
 
     @Override
     public List<Link> findNotUpdated(Duration interval) {
         return findAll().stream()
-                .filter(link -> Duration.between(link.getUpdatedAt(), OffsetDateTime.now()).compareTo(interval) > 0)
-                .toList();
+            .filter(link -> Duration.between(link.getUpdatedAt(), OffsetDateTime.now()).compareTo(interval) > 0)
+            .toList();
     }
 
     @Override

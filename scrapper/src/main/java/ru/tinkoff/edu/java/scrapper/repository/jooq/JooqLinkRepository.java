@@ -17,7 +17,6 @@ import static ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Link.LINK;
 public class JooqLinkRepository implements LinkRepository {
     private final DSLContext context;
 
-
     @Override
     @Transactional
     public Link save(Link link) {
@@ -27,58 +26,58 @@ public class JooqLinkRepository implements LinkRepository {
                 return alreadySaved;
             }
             return context.insertInto(LINK)
-                    .set(LINK.LINK_, link.getLink())
-                    .returning(LINK.fields())
-                    .fetchOneInto(Link.class);
-        }
-        return context.update(LINK)
                 .set(LINK.LINK_, link.getLink())
-                .set(LINK.UPDATEDAT, link.getUpdatedAt())
-                .set(LINK.GHFORKS, link.getGhForksCount())
-                .set(LINK.GHBRANCHES, link.getGhBranchesCount())
-                .set(LINK.SOANSWERS, link.getSoAnswersCount())
                 .returning(LINK.fields())
                 .fetchOneInto(Link.class);
+        }
+        return context.update(LINK)
+            .set(LINK.LINK_, link.getLink())
+            .set(LINK.UPDATEDAT, link.getUpdatedAt())
+            .set(LINK.GHFORKS, link.getGhForksCount())
+            .set(LINK.GHBRANCHES, link.getGhBranchesCount())
+            .set(LINK.SOANSWERS, link.getSoAnswersCount())
+            .returning(LINK.fields())
+            .fetchOneInto(Link.class);
     }
 
     @Override
     @Transactional
     public boolean remove(long id) {
         return context.deleteFrom(LINK)
-                .where(LINK.ID.eq(id))
-                .execute() > 0;
+            .where(LINK.ID.eq(id))
+            .execute() > 0;
     }
 
     @Override
     public Link findById(long linkId) {
         return context.select(LINK.fields())
-                .from(LINK)
-                .where(LINK.ID.eq(linkId))
-                .fetchOneInto(Link.class);
+            .from(LINK)
+            .where(LINK.ID.eq(linkId))
+            .fetchOneInto(Link.class);
     }
 
     @Override
     public Link findByLink(String link) {
         return context.select(LINK.fields())
-                .from(LINK)
-                .where(LINK.LINK_.eq(link))
-                .fetchOneInto(Link.class);
+            .from(LINK)
+            .where(LINK.LINK_.eq(link))
+            .fetchOneInto(Link.class);
     }
 
     @Override
     public List<Link> findNotUpdated(Duration interval) {
         return context.select(LINK.fields())
-                .from(LINK)
-                .fetchInto(Link.class)
-                .stream()
-                .filter(link -> Duration.between(link.getUpdatedAt(), OffsetDateTime.now()).compareTo(interval) > 0)
-                .toList();
+            .from(LINK)
+            .fetchInto(Link.class)
+            .stream()
+            .filter(link -> Duration.between(link.getUpdatedAt(), OffsetDateTime.now()).compareTo(interval) > 0)
+            .toList();
     }
 
     @Override
     public List<Link> findAll() {
         return context.select(LINK.fields())
-                .from(LINK)
-                .fetchInto(Link.class);
+            .from(LINK)
+            .fetchInto(Link.class);
     }
 }

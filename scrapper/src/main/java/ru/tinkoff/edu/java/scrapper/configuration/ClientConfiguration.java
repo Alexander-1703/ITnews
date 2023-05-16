@@ -20,10 +20,12 @@ public class ClientConfiguration {
     private final String stackoverflowUrl;
     private final String botUrl;
 
-    public ClientConfiguration(@Value("${client.github-api:https://api.github.com}") String githubUrl,
-                               @Value("${github.token}") String githubAccessToken,
-                               @Value("${client.stackoverflow-api:https://api.stackexchange.com/2.3}") String stackoverflowUrl,
-                               @Value("${client.bot-url:http://localhost:8081}") String botUrl) {
+    public ClientConfiguration(
+        @Value("${client.github-api:https://api.github.com}") String githubUrl,
+        @Value("${github.token}") String githubAccessToken,
+        @Value("${client.stackoverflow-api:https://api.stackexchange.com/2.3}") String stackoverflowUrl,
+        @Value("${client.bot-url:http://localhost:8081}") String botUrl
+    ) {
         this.githubUrl = githubUrl;
         this.githubAccessToken = githubAccessToken;
         this.stackoverflowUrl = stackoverflowUrl;
