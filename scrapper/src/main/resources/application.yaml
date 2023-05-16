@@ -25,7 +25,7 @@ client:
 
 spring:
   liquibase:
-    enabled: false
+    enabled: true
   datasource:
     url: jdbc:postgresql://localhost:5433/scrapper
     username: postgres
@@ -36,3 +36,18 @@ spring:
     port: 5673
     username: rmuser
     password: rmpassword
+
+management:
+  server:
+    port: 8082
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: "/"
+      path-mapping:
+        prometheus: "metrics"
+      exposure:
+        include: [ "info", "health", "prometheus" ]
+  metrics:
+    tags:
+      application: ${spring.application.name}

@@ -17,3 +17,18 @@ spring:
     port: 5673
     username: rmuser
     password: rmpassword
+
+management:
+  server:
+    port: 8083
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: "/"
+      path-mapping:
+        prometheus: "metrics"
+      exposure:
+        include: [ "info", "health", "prometheus" ]
+  metrics:
+    tags:
+      application: ${spring.application.name}
