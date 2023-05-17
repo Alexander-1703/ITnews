@@ -3,7 +3,7 @@ scrapper:
     interval: "10s"
   update-link-interval: "10s"
   accessType: jpa
-  use-queue: true
+  use-queue: false
   rabbitMQ:
     exchange: links.exchange
     queue: link.queue
@@ -24,6 +24,8 @@ client:
   bot-url: "http://localhost:8081"
 
 spring:
+  application:
+    name: "scrapper"
   liquibase:
     enabled: false
   datasource:
