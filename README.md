@@ -1,4 +1,4 @@
-# ITnews
+# UpdateNotifierBot
 Pet project [tinkoff backend course]. 
 A bot that allows you to track content updates from stackoverflow and github.
 
