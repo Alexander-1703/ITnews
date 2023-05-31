@@ -19,6 +19,7 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.bot.dto.request.LinkUpdateRequest;
+import ru.tinkoff.edu.java.bot.metrics.ProcessedMessageCount;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.commands.Command;
 import ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor.UserMessageProcessor;
 
@@ -27,13 +28,16 @@ import ru.tinkoff.edu.java.bot.telegrambot.wrapper.processor.UserMessageProcesso
 public final class TelegramBotImpl implements TgBot {
     private final TelegramBot bot;
     private final UserMessageProcessor userMessageProcessor;
+    private final ProcessedMessageCount messageCount;
 
     public TelegramBotImpl(
         @Value("${bot.token}") final String token,
-        @Autowired final UserMessageProcessor userMessageProcessor
+        @Autowired final UserMessageProcessor userMessageProcessor,
+        @Autowired ProcessedMessageCount messageCount
     ) {
         this.userMessageProcessor = userMessageProcessor;
         bot = new TelegramBot(token);
+        this.messageCount = messageCount;
     }
 
     @Override
@@ -70,6 +74,7 @@ public final class TelegramBotImpl implements TgBot {
             if (response != null) {
                 response.parseMode(ParseMode.Markdown);
                 log.info("Sending response");
+                messageCount.increment();
                 execute(response);
             }
             processedUpdates++;

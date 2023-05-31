@@ -3,7 +3,7 @@ scrapper:
     interval: "10s"
   update-link-interval: "10s"
   accessType: jpa
-  use-queue: true
+  use-queue: false
   rabbitMQ:
     exchange: links.exchange
     queue: link.queue
@@ -24,6 +24,8 @@ client:
   bot-url: "http://localhost:8081"
 
 spring:
+  application:
+    name: "scrapper"
   liquibase:
     enabled: false
   datasource:
@@ -36,3 +38,25 @@ spring:
     port: 5673
     username: rmuser
     password: rmpassword
+
+management:
+  server:
+    port: 8082
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: "/"
+      path-mapping:
+        prometheus: "metrics"
+      exposure:
+        include: [ "info", "health", "prometheus" ]
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
